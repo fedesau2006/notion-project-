@@ -3,17 +3,21 @@
 <head>
     <title>Widget Orologio Digitale Retro</title>
     <style>
-        /* Importazione dei font digitali/retro */
-        /* Ho scelto VT323: sembra un display digitale. Major Mono Display è un'alternativa più "stretta" */
-        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Major+Mono+Display&display=swap');
+        /* Variabile CSS per la coerenza del colore */
+        :root {
+            --display-color: #4ac0f7; /* Azzurro brillante */
+        }
+        
+        /* Importazione del font digitale/retro */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
         body {
-            /* Impostazioni di base */
             height: 100vh;
             margin: 0;
             padding: 0;
-            overflow: hidden;
             position: relative;
+            
+            /* Rimosso 'overflow: hidden' per una migliore integrazione nell'iframe di Notion */
 
             /* Sfondo */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
@@ -22,71 +26,58 @@
             background-repeat: no-repeat;
         }
 
-        /* Contenitore principale per l'ora e il saluto */
         .widget-container {
-            /* --- POSIZIONAMENTO E DIMENSIONAMENTO OPTIMIZZATO --- */
+            /* POSIZIONAMENTO E DIMENSIONAMENTO OPTIMIZZATO per il quadrante */
             position: absolute;
-
-            /* Posizionamento per l'alloggiamento nel quadrante azzurro (desktop) */
-            top: 57%;    /* Leggermente più in alto */
-            left: 56.5%; /* Spostato più a sinistra */
-
-            /* Dimensioni ridotte e ottimizzate */
+            top: 57%;
+            left: 56.5%; 
             width: 17vw;
-            height: 14vh; /* L'altezza è necessaria per centrare bene il contenuto */
+            height: 14vh; 
 
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centra verticalmente */
-            align-items: center;   /* Centra orizzontalmente */
-            line-height: 1; /* Rimuove lo spazio extra tra le righe */
+            justify-content: center; 
+            align-items: center;   
+            line-height: 1; 
+            box-sizing: border-box;
 
-            /* --- INCLINAZIONE OBLIQUA E SCALA (Trasformazione) --- */
-            /* Regola l'inclinazione e la dimensione per adattarsi al display del radio */
+            /* INCLINAZIONE OBLIQUA e SCALA */
+            /* skewX(5deg) per l'inclinazione, scale(0.9) per adattare la dimensione */
             transform: skewX(5deg) scale(0.9);
 
-            /* --- STILE DEL TESTO (VT323) --- */
-            font-family: 'VT323', monospace; /* Nuovo font più adatto al display */
-            /* font-family: 'Major Mono Display', monospace; (Alternativa) */
-            color: #4ac0f7; /* Azzurro brillante */
+            /* STILE DEL TESTO (VT323) */
+            font-family: 'VT323', monospace; 
+            color: var(--display-color);
 
-            /* --- EFFETTO GLOW E OMBREGGIATURA (Per simulare l'accensione del display) --- */
+            /* EFFETTO GLOW */
             text-shadow:
-                0 0 5px rgba(255, 255, 255, 0.6), /* Piccola luce bianca attorno */
-                0 0 15px #4ac0f7,
-                0 0 30px #4ac0f7; /* Glow azzurro più intenso */
-
-            /* Assicurati che il contenuto non venga tagliato */
-            box-sizing: border-box;
+                0 0 5px rgba(255, 255, 255, 0.6),
+                0 0 15px var(--display-color),
+                0 0 30px var(--display-color);
         }
 
         #clock {
-            /* Regola la dimensione dell'ora in base al nuovo font */
             font-size: 3.5vw;
-            margin-bottom: 0.5vh; /* Piccolo spazio tra ora e saluto */
+            margin-bottom: 0.5vh; 
         }
 
         #greeting {
-            /* Regola la dimensione del saluto */
             font-size: 1.5vw;
             white-space: nowrap;
         }
 
         /* --- Media queries (Reattività) --- */
         @media (max-width: 768px) {
-            /* Regolazioni per dispositivi mobili o schermi più piccoli */
             .widget-container {
                 top: 61%;
                 left: 60%;
                 width: 30vw;
                 height: 10vh;
-                /* Adattamento dell'inclinazione e della scala per schermi più piccoli */
                 transform: skewX(5deg) scale(1.0);
             }
             #clock { font-size: 5vw; }
             #greeting { font-size: 2.2vw; }
         }
-
     </style>
 </head>
 <body>
@@ -96,45 +87,69 @@
     </div>
 
     <script>
+        // Funzione per l'aggiornamento dell'orologio (Pulizia 2B)
         function updateClock() {
             const now = new Date();
-            // Aggiunta di un check per la lingua/formato dell'ora (opzionale)
-            // const timeString = now.toLocaleTimeString('it-IT', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            // Metodo conciso per formattare ore, minuti e secondi con zero iniziale
+            const timeString = [
+                now.getHours(),
+                now.getMinutes(),
+                now.getSeconds()
+            ].map(n => n.toString().padStart(2, '0')).join(':');
             
-            // Manteniamo il tuo formato per coerenza
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const seconds = now.getSeconds().toString().padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('clock').textContent = timeString;
         }
 
-        function setGreeting() {
+        // Funzione per l'aggiornamento del saluto (Robustezza)
+        function setGreetingAndNextInterval() {
+            const now = new Date();
+            const hour = now.getHours();
             const greetingElement = document.getElementById('greeting');
-            const hour = new Date().getHours();
             let greetingText;
-
-            // Logica di saluto ottimizzata
+            let nextHourChange;
+            
+            // Logica del saluto e definizione dell'ora di cambio
             if (hour >= 5 && hour < 12) {
-                greetingText = 'おはようございます'; // Buongiorno (mattina presto)
+                greetingText = 'おはようございます';
+                nextHourChange = 12; // Prossimo cambio a mezzogiorno
             } else if (hour >= 12 && hour < 18) {
-                greetingText = 'こんにちは'; // Buon pomeriggio
+                greetingText = 'こんにちは';
+                nextHourChange = 18; // Prossimo cambio alle 18:00
             } else if (hour >= 18 && hour < 22) {
-                greetingText = 'こんばんは'; // Buonasera (sera)
+                greetingText = 'こんばんは';
+                nextHourChange = 22; // Prossimo cambio alle 22:00
             } else {
-                greetingText = 'おやすみ'; // Buonanotte (tarda notte)
+                greetingText = 'おやすみ';
+                nextHourChange = 24 + 5; // Prossimo cambio alle 05:00 del giorno dopo
             }
+            
             greetingElement.textContent = greetingText;
+
+            /* --- Calcolo Dinamico del Prossimo Aggiornamento --- */
+            const nextChangeTime = new Date(now);
+            
+            if (nextHourChange > 23) {
+                nextChangeTime.setDate(now.getDate() + 1); // Passa al giorno successivo
+                nextHourChange -= 24;
+            }
+            
+            // Imposta l'ora del prossimo cambio (con un piccolo margine di 5 secondi)
+            nextChangeTime.setHours(nextHourChange, 0, 5, 0); 
+            
+            const timeToWait = nextChangeTime.getTime() - now.getTime();
+            
+            // Imposta il timeout esatto per il prossimo cambio di saluto
+            setTimeout(setGreetingAndNextInterval, timeToWait);
         }
 
-        // --- Gestione degli Intervalli (Frequenza) ---
-        // L'orologio si aggiorna ogni secondo
-        setInterval(updateClock, 1000);
-        // Il saluto si aggiorna ogni 30 minuti (1.800.000 ms)
-        setInterval(setGreeting, 1800000);
+        /* --- Inizializzazione --- */
+        
+        // Imposta l'orologio (aggiornamento ogni secondo)
+        setInterval(updateClock, 1000); 
+        updateClock(); // Chiama subito per evitare un ritardo di 1 secondo
 
-        // Chiamata iniziale per visualizzare immediatamente ora e saluto
-        updateClock();
-        setGreeting();
+        // Imposta il saluto e calcola quando aggiornarlo nuovamente (più robusto)
+        setGreetingAndNextInterval();
     </script>
 </body>
 </html>
