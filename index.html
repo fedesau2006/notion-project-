@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Centratura V15 - Allineamento Finale)</title>
+    <title>Widget Orologio Digitale Retro</title>
     <style>
         /* Variabili CSS */
         :root {
             --display-color: #ffe6f2; 
-            --glow-color: #ff3399;   
+            --glow-color: #ff3399;  
         }
         
         /* Font: Orbitron (digitale moderno) e Noto Sans JP (giapponese) */
@@ -26,20 +26,20 @@
         }
 
         .widget-container {
-            /* --- POSIZIONAMENTO E TRASFORMAZIONE (Invariato) --- */
+            /* --- POSIZIONAMENTO E TRASFORMAZIONE --- */
             position: absolute;
             top: 55%; 
             left: 56.5%; 
             
             box-sizing: border-box;
             
-            /* Tutte le trasformazioni 3D/prospettiche */
+            /* Applichiamo tutte le trasformazioni 3D/prospettiche insieme */
             transform: 
                 translate(-50%, -50%) 
-                rotateX(4deg)          
-                rotateY(-3deg)          
-                skewX(7deg)             
-                scale(0.85)             
+                rotateX(4deg) 
+                rotateY(-3deg) 
+                skewX(7deg) 
+                scale(0.85) 
                 translate(15vw, 15vh); 
 
             /* Flexbox per centrare orizzontalmente e verticalmente */
@@ -67,8 +67,8 @@
             font-weight: 500; 
             letter-spacing: 0.1vw; 
             
-            /* ⭐ MODIFICATO: Inclinazione a -4deg e altezza a -8.2vh ⭐ */
-            transform: rotate(-4deg) translate(-6.0vw, -8.2vh); 
+            /* ⭐ MODIFICATO: Altezza a -9.0vh e inclinazione a -7deg ⭐ */
+            transform: rotate(-7deg) translate(-6.0vw, -9.0vh); 
         }
 
         #greeting {
@@ -76,11 +76,11 @@
             font-size: 0.9vw; 
             font-weight: 400;
             
-            /* ⭐ MODIFICATO: Distanza ridotta e nuova inclinazione ⭐ */
-            margin-top: 0.3vh; /* Più vicino all'ora */
+            /* ⭐ MODIFICATO: Distanza ridotta a -1.0vh e inclinazione a -7deg ⭐ */
+            margin-top: -1.0vh; 
             
             /* Allineato all'orologio */
-            transform: rotate(-4deg) translate(-6.0vw, 0vh); 
+            transform: rotate(-7deg) translate(-6.0vw, 0vh); 
 
             text-shadow: none; 
             opacity: 0.8;
@@ -89,17 +89,18 @@
         /* --- Media queries (Reattività) --- */
         @media (max-width: 768px) {
              .widget-container {
-                /* ... (altre trasformazioni invariate) ... */
+                 /* ... (altre trasformazioni invariate) ... */
              }
              #clock { 
                  font-size: 6.5vw; 
                  /* Applichiamo le stesse modifiche di inclinazione e altezza di base */
-                 transform: rotate(-4deg) translate(-6.0vw, -8.2vh); 
+                 transform: rotate(-7deg) translate(-6.0vw, -9.0vh); 
              }
              #greeting { 
                  font-size: 1.8vw; 
-                 margin-top: 1.0vh; /* Aggiustato per schermi più piccoli */
-                 transform: rotate(-4deg) translate(-6.0vw, 0vh); 
+                 /* Aggiustato per schermi più piccoli */
+                 margin-top: -1.0vh; 
+                 transform: rotate(-7deg) translate(-6.0vw, 0vh); 
              } 
         }
     </style>
