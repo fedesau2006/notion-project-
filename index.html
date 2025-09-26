@@ -3,22 +3,23 @@
 <head>
     <title>Widget Orologio Digitale Retro (Finalizzato)</title>
     <style>
-        /* Variabili CSS: Cambiato il colore da azzurro a bianco */
+        /* Variabili CSS: Ottimizzate */
         :root {
-            --display-color: #FFFFFF; /* Bianco puro per un look display retroilluminato */
-            --glow-color: #4ac0f7;    /* Azzurro per l'effetto glow attorno */
+            --display-color: #f0f8ff; /* Azzurrognolo molto chiaro (più morbido del bianco puro) */
+            --glow-color: #6aabff;    /* Azzurro cielo tenue per un glow più delicato */
         }
         
-        /* Importazione del font digitale/retro */
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        /* Font: Sostituito VT323 con 'Noto Sans JP' (Giapponese) e un font Lofi/Pixel-Art */
+        /* 'DotGothic16' è un font pixel-art più adatto all'estetica */
+        @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
         body {
+            /* Manteniamo le proprietà per lo sfondo */
             height: 100vh;
             margin: 0;
             padding: 0;
             position: relative;
-            
-            /* Sfondo */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
             background-size: cover;
             background-position: center center;
@@ -26,44 +27,46 @@
         }
 
         .widget-container {
-            /* --- NUOVE REGOLAZIONI DI POSIZIONE --- */
+            /* --- NUOVE REGOLAZIONI DI POSIZIONE (PIÙ PRECISE) --- */
             position: absolute;
-            /* Ho spostato 'top' più in alto e 'left' più a sinistra per centrare */
-            top: 55%;    
-            left: 57%; 
+            top: 54%;    /* Leggermente più su */
+            left: 56.5%; /* Leggermente più a sinistra per centrare */
+            
             width: 17vw;
-            height: 14vh; 
-
+            height: 14vh;
+            
+            /* CENTRATURA E FLEXBOX */
             display: flex;
             flex-direction: column;
-            justify-content: center; 
-            align-items: center;   
-            line-height: 1; 
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
             box-sizing: border-box;
 
             /* --- NUOVE REGOLAZIONI DI TRASFORMAZIONE (3D) --- */
             /* skewX per l'inclinazione (5deg), scale(0.9) per la dimensione. */
-            /* translate(X, Y) per sollevare/spostare finemente. */
-            transform: skewX(5deg) scale(0.9) translate(-10px, -5px);
+            /* translate per il posizionamento fine (ottimizzato). */
+            transform: skewX(5deg) scale(0.85) translate(-10px, -5px); /* Ridotta leggermente la scala */
 
-            /* STILE DEL TESTO */
-            font-family: 'VT323', monospace; 
-            color: var(--display-color); /* Ora Bianco */
+            /* STILE DEL TESTO: 'DotGothic16' (Pixel Lofi) come principale, 'Noto Sans JP' come fallback */
+            font-family: 'DotGothic16', 'Noto Sans JP', monospace;
+            color: var(--display-color); 
 
-            /* EFFETTO GLOW (Ora il glow è azzurro, ma il testo è bianco) */
+            /* EFFETTO GLOW (Ammorbidito per l'estetica Lofi) */
             text-shadow:
-                0 0 5px rgba(255, 255, 255, 0.9), /* Luce bianca più intensa */
+                0 0 4px rgba(255, 255, 255, 0.8), /* Luce bianca più diffusa */
                 0 0 10px var(--glow-color),
-                0 0 20px var(--glow-color); 
+                0 0 18px var(--glow-color);
         }
 
         #clock {
-            font-size: 3.5vw;
-            margin-bottom: 0.5vh; 
+            font-size: 3.2vw; /* Leggermente ridotto per centrare meglio */
+            margin-bottom: 0.5vh;
+            letter-spacing: 0.15vw; /* Aggiunto spaziatura per un look "digitale" più piacevole */
         }
 
         #greeting {
-            font-size: 1.5vw;
+            font-size: 1.2vw; /* Leggermente ridotto */
             white-space: nowrap;
         }
 
@@ -77,7 +80,7 @@
                 transform: skewX(5deg) scale(1.0);
             }
             #clock { font-size: 5vw; }
-            #greeting { font-size: 2.2vw; }
+            #greeting { font-size: 2.0vw; } /* Adattato */
         }
     </style>
 </head>
@@ -88,7 +91,7 @@
     </div>
 
     <script>
-        // Funzione per l'aggiornamento dell'orologio (Pulizia)
+        // Funzione per l'aggiornamento dell'orologio
         function updateClock() {
             const now = new Date();
             const timeString = [
@@ -100,7 +103,7 @@
             document.getElementById('clock').textContent = timeString;
         }
 
-        // Funzione per l'aggiornamento del saluto (Robustezza)
+        // Funzione per l'aggiornamento del saluto
         function setGreetingAndNextInterval() {
             const now = new Date();
             const hour = now.getHours();
@@ -133,6 +136,7 @@
                 nextHourChange -= 24;
             }
             
+            // Setta l'orario di cambio (5 secondi dopo l'ora esatta per sicurezza)
             nextChangeTime.setHours(nextHourChange, 0, 5, 0); 
             
             const timeToWait = nextChangeTime.getTime() - now.getTime();
@@ -141,8 +145,8 @@
         }
 
         /* --- Inizializzazione --- */
-        setInterval(updateClock, 1000); 
-        updateClock(); 
+        setInterval(updateClock, 1000);
+        updateClock();
         setGreetingAndNextInterval();
     </script>
 </body>
