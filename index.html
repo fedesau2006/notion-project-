@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Centratura V14 - Spostamento Estremo)</title>
+    <title>Widget Orologio Digitale Retro (Centratura V15 - Allineamento Finale)</title>
     <style>
         /* Variabili CSS */
         :root {
@@ -67,8 +67,8 @@
             font-weight: 500; 
             letter-spacing: 0.1vw; 
             
-            /* ⭐ MODIFICA RICHIESTA: translate(-6.0vw, -6.0vh) ⭐ */
-            transform: rotate(-7deg) translate(-6.0vw, -6.0vh); 
+            /* ⭐ MODIFICATO: Inclinazione a -4deg e altezza a -8.2vh ⭐ */
+            transform: rotate(-4deg) translate(-6.0vw, -8.2vh); 
         }
 
         #greeting {
@@ -76,11 +76,11 @@
             font-size: 0.9vw; 
             font-weight: 400;
             
-            /* Posizionamento sotto l'orario */
-            margin-top: 0.5vh; 
+            /* ⭐ MODIFICATO: Distanza ridotta e nuova inclinazione ⭐ */
+            margin-top: 0.3vh; /* Più vicino all'ora */
             
             /* Allineato all'orologio */
-            transform: rotate(-7deg) translate(-6.0vw, 0vh); 
+            transform: rotate(-4deg) translate(-6.0vw, 0vh); 
 
             text-shadow: none; 
             opacity: 0.8;
@@ -93,12 +93,13 @@
              }
              #clock { 
                  font-size: 6.5vw; 
-                 transform: rotate(-7deg) translate(-6.0vw, -6.0vh); 
+                 /* Applichiamo le stesse modifiche di inclinazione e altezza di base */
+                 transform: rotate(-4deg) translate(-6.0vw, -8.2vh); 
              }
              #greeting { 
                  font-size: 1.8vw; 
-                 margin-top: 1.5vh; 
-                 transform: rotate(-7deg) translate(-6.0vw, 0vh); 
+                 margin-top: 1.0vh; /* Aggiustato per schermi più piccoli */
+                 transform: rotate(-4deg) translate(-6.0vw, 0vh); 
              } 
         }
     </style>
@@ -110,6 +111,7 @@
     </div>
 
     <script>
+        // ... (Script JavaScript invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('it-IT', { 
