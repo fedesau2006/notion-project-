@@ -6,83 +6,81 @@
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         body {
-            /* Impostazioni del corpo per il layout */
+            /* Impostazioni del corpo */
             height: 100vh;
             margin: 0;
             padding: 0;
             overflow: hidden;
+            position: relative; /* Base per il posizionamento assoluto */
 
-            /* Sfondo: l'immagine deve essere la base per il posizionamento */
+            /* Sfondo */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-
-            /* Imposta il body come punto di riferimento per il posizionamento */
-            position: relative;
         }
 
         /* Contenitore principale per l'ora e il saluto */
         .widget-container {
-            /* --- POSIZIONAMENTO CRUCIALE --- */
-            /* Aggancia il contenitore all'interno del riquadro azzurro */
+            /* --- POSIZIONAMENTO AGGIORNATO --- */
             position: absolute;
             
-            /* Questi valori Varian: Devi regolarli per centrare il testo nel riquadro azzurro */
-            /* Valori stimati per la tua immagine: */
-            top: 56%; /* Sposta il contenitore verticalmente (dal 50% al 60% circa) */
-            left: 56%; /* Sposta il contenitore orizzontalmente (dal 50% al 60% circa) */
+            /* Nuovo posizionamento: Spostato più in basso (top) e a destra (left) */
+            top: 59%; 
+            left: 58%; 
             
             /* Regola la larghezza e l'altezza per coprire l'area del riquadro */
-            width: 15vw;
-            height: 15vh;
+            width: 14vw; /* Leggermente più stretto */
+            height: 14vh;
 
             /* Allineamento del testo al centro */
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centra verticalmente */
-            align-items: center; /* Centra orizzontalmente */
+            justify-content: center; 
+            align-items: center; 
 
             /* --- STILE DEL TESTO AZZURRO --- */
             font-family: 'Press Start 2P', monospace;
-            color: #4ac0f7; /* Colore azzurro */
-            text-shadow: 0 0 5px #4ac0f7, 0 0 10px #4ac0f7; /* Effetto luminoso azzurro */
+            color: #4ac0f7; 
+            text-shadow: 0 0 5px #4ac0f7, 0 0 10px #4ac0f7; 
             
             /* Debug: Rimuovi dopo aver posizionato correttamente */
             /* border: 1px solid red; */
         }
 
         #clock {
-            font-size: 2.5vw;
+            /* Dimensione del font leggermente più piccola */
+            font-size: 2.3vw; 
             line-height: 1.2;
         }
 
         #greeting {
-            font-size: 1.2vw;
+            /* Dimensione del font leggermente più piccola */
+            font-size: 1.1vw; 
             white-space: nowrap;
         }
 
-        /* Media queries per la reattività */
+        /* Media queries (mantengono la reattività) */
         @media (max-width: 768px) {
             .widget-container {
-                top: 58%; /* Potrebbe richiedere aggiustamenti */
-                left: 58%; /* Potrebbe richiedere aggiustamenti */
+                top: 61%; 
+                left: 60%; 
                 width: 25vw;
                 height: 10vh;
             }
-            #clock { font-size: 4vw; }
-            #greeting { font-size: 2vw; }
+            #clock { font-size: 3.8vw; }
+            #greeting { font-size: 1.8vw; }
         }
 
         @media (max-width: 480px) {
             .widget-container {
-                top: 60%; /* Potrebbe richiedere aggiustamenti */
-                left: 60%; /* Potrebbe richiedere aggiustamenti */
+                top: 63%; 
+                left: 62%; 
                 width: 40vw;
                 height: 12vh;
             }
-            #clock { font-size: 6vw; }
-            #greeting { font-size: 3vw; }
+            #clock { font-size: 5.5vw; }
+            #greeting { font-size: 2.8vw; }
         }
     </style>
 </head>
