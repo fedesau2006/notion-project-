@@ -9,9 +9,8 @@
             --glow-color: #6aabff;    /* Azzurro cielo tenue per un glow più delicato */
         }
         
-        /* Font: Sostituito VT323 con 'Noto Sans JP' (Giapponese) e un font Lofi/Pixel-Art */
-        /* 'DotGothic16' è un font pixel-art più adatto all'estetica */
-        @import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+        /* Font: Sostituito con 'Pixelify Sans' (molto più fedele all'effetto matrice di punti) */
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
         body {
@@ -27,10 +26,10 @@
         }
 
         .widget-container {
-            /* --- NUOVE REGOLAZIONI DI POSIZIONE (PIÙ PRECISE) --- */
+            /* --- REGOLAZIONI FINALI DI POSIZIONE E INCLINAZIONE --- */
             position: absolute;
-            top: 54%;    /* Leggermente più su */
-            left: 56.5%; /* Leggermente più a sinistra per centrare */
+            top: 54.8%;    /* Centratura micrometrica finale */
+            left: 57.1%;   /* Centratura micrometrica finale */
             
             width: 17vw;
             height: 14vh;
@@ -43,31 +42,35 @@
             line-height: 1;
             box-sizing: border-box;
 
-            /* --- NUOVE REGOLAZIONI DI TRASFORMAZIONE (3D) --- */
-            /* skewX per l'inclinazione (5deg), scale(0.9) per la dimensione. */
-            /* translate per il posizionamento fine (ottimizzato). */
-            transform: skewX(5deg) scale(0.85) translate(-10px, -5px); /* Ridotta leggermente la scala */
+            /* ******************************************************************* */
+            /* SOLUZIONE PROSPETTICA: skewX(8deg) per l'inclinazione laterale e     */
+            /* skewY(-1deg) per la leggera inclinazione verticale (prospettiva bassa)*/
+            /* ******************************************************************* */
+            transform: skewX(8deg) skewY(-1deg) scale(0.85) translate(-10px, -5px); 
 
-            /* STILE DEL TESTO: 'DotGothic16' (Pixel Lofi) come principale, 'Noto Sans JP' come fallback */
-            font-family: 'DotGothic16', 'Noto Sans JP', monospace;
+            /* STILE DEL TESTO: 'Pixelify Sans' come principale */
+            font-family: 'Pixelify Sans', 'Noto Sans JP', monospace;
             color: var(--display-color); 
 
-            /* EFFETTO GLOW (Ammorbidito per l'estetica Lofi) */
+            /* EFFETTO GLOW */
             text-shadow:
-                0 0 4px rgba(255, 255, 255, 0.8), /* Luce bianca più diffusa */
+                0 0 3px rgba(255, 255, 255, 0.9), /* Luce bianca intensa */
                 0 0 10px var(--glow-color),
-                0 0 18px var(--glow-color);
+                0 0 20px var(--glow-color);
         }
 
         #clock {
-            font-size: 3.2vw; /* Leggermente ridotto per centrare meglio */
+            font-size: 3.0vw; /* Ulteriore leggero aggiustamento della dimensione */
             margin-bottom: 0.5vh;
-            letter-spacing: 0.15vw; /* Aggiunto spaziatura per un look "digitale" più piacevole */
+            letter-spacing: 0.25vw; /* Spaziatura aumentata per un look "pixel" più marcato */
+            font-weight: 700;
         }
 
         #greeting {
-            font-size: 1.2vw; /* Leggermente ridotto */
+            font-size: 1.2vw; 
             white-space: nowrap;
+            font-weight: 400;
+            /* Per il saluto, usiamo 'Noto Sans JP' con 'Pixelify Sans' come fallback per i caratteri speciali */
         }
 
         /* --- Media queries (Reattività) --- */
@@ -77,10 +80,10 @@
                 left: 60%;
                 width: 30vw;
                 height: 10vh;
-                transform: skewX(5deg) scale(1.0);
+                transform: skewX(8deg) skewY(-1deg) scale(1.0); /* Aggiornato anche qui */
             }
             #clock { font-size: 5vw; }
-            #greeting { font-size: 2.0vw; } /* Adattato */
+            #greeting { font-size: 2.0vw; } 
         }
     </style>
 </head>
@@ -91,7 +94,7 @@
     </div>
 
     <script>
-        // Funzione per l'aggiornamento dell'orologio
+        // Il codice JavaScript rimane invariato e robusto
         function updateClock() {
             const now = new Date();
             const timeString = [
@@ -103,7 +106,6 @@
             document.getElementById('clock').textContent = timeString;
         }
 
-        // Funzione per l'aggiornamento del saluto
         function setGreetingAndNextInterval() {
             const now = new Date();
             const hour = now.getHours();
@@ -111,7 +113,6 @@
             let greetingText;
             let nextHourChange;
             
-            // Logica del saluto
             if (hour >= 5 && hour < 12) {
                 greetingText = 'おはようございます';
                 nextHourChange = 12;
@@ -128,7 +129,6 @@
             
             greetingElement.textContent = greetingText;
 
-            /* --- Calcolo Dinamico del Prossimo Aggiornamento --- */
             const nextChangeTime = new Date(now);
             
             if (nextHourChange > 23) {
@@ -136,7 +136,6 @@
                 nextHourChange -= 24;
             }
             
-            // Setta l'orario di cambio (5 secondi dopo l'ora esatta per sicurezza)
             nextChangeTime.setHours(nextHourChange, 0, 5, 0); 
             
             const timeToWait = nextChangeTime.getTime() - now.getTime();
@@ -144,7 +143,6 @@
             setTimeout(setGreetingAndNextInterval, timeToWait);
         }
 
-        /* --- Inizializzazione --- */
         setInterval(updateClock, 1000);
         updateClock();
         setGreetingAndNextInterval();
