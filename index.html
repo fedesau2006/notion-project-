@@ -153,4 +153,32 @@
                 greetingText = 'こんにちは';
                 nextHourChange = 18;
             } else if (hour >= 18 && hour < 22) {
-                greetingText
+                greetingText = 'こんばんは';
+                nextHourChange = 22;
+            } else {
+                greetingText = 'おやすみ';
+                nextHourChange = 24 + 5;
+            }
+            
+            greetingElement.textContent = greetingText;
+
+            const nextChangeTime = new Date(now);
+            
+            if (nextHourChange > 23) {
+                nextChangeTime.setDate(now.getDate() + 1);
+                nextHourChange -= 24;
+            }
+            
+            nextChangeTime.setHours(nextHourChange, 0, 5, 0); 
+            
+            const timeToWait = nextChangeTime.getTime() - now.getTime();
+            
+            setTimeout(setGreetingAndNextInterval, timeToWait);
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+        setGreetingAndNextInterval();
+    </script>
+</body>
+</html>
