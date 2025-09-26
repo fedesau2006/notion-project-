@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Centratura V12 - Regolazioni Fini)</title>
+    <title>Widget Orologio Digitale Retro (Centratura V13 - Spostamento Sinistra/Alto)</title>
     <style>
         /* Variabili CSS */
         :root {
@@ -67,8 +67,8 @@
             font-weight: 500; 
             letter-spacing: 0.1vw; 
             
-            /* ⭐ MODIFICA RICHIESTA ⭐: translate(-2.2vw, -2.0vh) */
-            transform: rotate(-7deg) translate(-2.2vw, -2.0vh); 
+            /* ⭐ MODIFICA RICHIESTA: Spostamento a Sinistra (-3.0vw) e Alto (-3.0vh) ⭐ */
+            transform: rotate(-7deg) translate(-3.0vw, -3.0vh); 
         }
 
         #greeting {
@@ -77,10 +77,10 @@
             font-weight: 400;
             
             /* Posizionamento sotto l'orario */
-            margin-top: 0.8vh; 
+            margin-top: 0.5vh; 
             
-            /* ⭐ MODIFICA RICHIESTA ⭐: Allineato all'orologio */
-            transform: rotate(-7deg) translate(-2.2vw, 0vh); 
+            /* Allineato all'orologio */
+            transform: rotate(-7deg) translate(-3.0vw, 0vh); 
 
             text-shadow: none; 
             opacity: 0.8;
@@ -93,12 +93,12 @@
              }
              #clock { 
                  font-size: 6.5vw; 
-                 transform: rotate(-7deg) translate(-2.2vw, -2.0vh); 
+                 transform: rotate(-7deg) translate(-3.0vw, -3.0vh); 
              }
              #greeting { 
                  font-size: 1.8vw; 
                  margin-top: 1.5vh; 
-                 transform: rotate(-7deg) translate(-2.2vw, 0vh); 
+                 transform: rotate(-7deg) translate(-3.0vw, 0vh); 
              } 
         }
     </style>
