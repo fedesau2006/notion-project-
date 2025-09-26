@@ -1,118 +1,145 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro</title>
+    <title>Retro Clock Widget Notion (Ottimizzato per stabilità)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
+    
     <style>
-        /* Variabili CSS */
+        /* ==================================== */
+        /* CONFIGURAZIONE BASE E COLORI         */
+        /* ==================================== */
         :root {
-            --display-color: #ffe6f2; 
-            --glow-color: #ff3399;  
+            /* Colore del display (testo) */
+            --display-color: #e6e6fa; 
+            /* Bagliore Rosa Caldo/Neon */
+            --glow-color: #e6e6fa; 
+            
+            /* ROTAZIONE FINALE: -6.4 gradi (SENSO ORARIO) */
+            --display-rotation-compensation: -6.4deg; 
+            
+            /* Dimensioni Font */
+            --clock-size: 3em; 
+            --greeting-size: 1.5em; /* Corretto la virgola in 1.5em */
+            
+            /* Rimuoviamo font-size: 16px; da qui */
         }
-        
-        /* Font: Orbitron (digitale moderno) e Noto Sans JP (giapponese) */
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
+        /* Import Noto Sans JP mantenuto per i saluti */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap');
+
+        /* ==================================== */
+        /* BODY & SFONDO                        */
+        /* ==================================== */
         body {
             height: 100vh;
             margin: 0;
-            padding: 0;
             position: relative;
+            /* ⭐ URL AGGIORNATO COME RICHIESTO ⭐ */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            perspective: 800px;
+            perspective: 1000px;
         }
 
+        /* ==================================== */
+        /* CONTENITORE e TRASFORMAZIONI         */
+        /* ==================================== */
         .widget-container {
-            /* --- POSIZIONAMENTO E TRASFORMAZIONE --- */
+            /* ⭐ CHIAVE: Forziamo dimensione base in PX per stabilità EM in Notion ⭐ */
+            font-size: 20px; 
+            
             position: absolute;
+            /* Queste percentuali dipendono ancora dalla viewport di GitHub */
             top: 55%; 
             left: 56.5%; 
-            
             box-sizing: border-box;
             
-            /* Applichiamo tutte le trasformazioni 3D/prospettiche insieme */
+            /* ⭐ MODIFICA CHIAVE: Usiamo PX invece di VW/VH per stabilità in Notion ⭐ */
+            /* Regola questi valori per dimensionare l'orologio come desideri su Notion */
+            width: 400px;  
+            height: 280px; 
+            
             transform: 
-                translate(-50%, -50%) 
-                rotateX(4deg) 
+                translate(-50%, -50%)
+                rotateX(6deg) 
                 rotateY(-3deg) 
                 skewX(7deg) 
                 scale(0.85) 
                 translate(15vw, 15vh); 
-
-            /* Flexbox per centrare orizzontalmente e verticalmente */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: auto;
-            height: auto;
         }
 
+        /* ==================================== */
+        /* AREA DISPLAY (POSIZIONAMENTO)        */
+        /* ==================================== */
+        #clock-display-area {
+            position: absolute;
+            
+            /* Queste percentuali dipendono dal contenitore di 400x280px */
+            width: 40%; 
+            height: 35%; 
+            
+            top: -6%; 
+            left: 14%; 
+
+            /* Sfondo trasparente */
+            background-color: transparent !important; 
+            
+            /* Centramento del testo */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+
+            /* Rotazione compensativa (-6.9deg orario) */
+            transform: rotate(var(--display-rotation-compensation)); 
+        }
+
+        /* ==================================== */
+        /* STILI TESTO (BAGLIORE FINE)          */
+        /* ==================================== */
         .digitale-glow {
-            color: var(--display-color);
+            color: var(--display-color); 
             line-height: 1;
             white-space: nowrap;
+            text-align: center;
             text-shadow:
-                1px 1px 0px rgba(0, 0, 0, 0.3), 
                 0 0 5px var(--glow-color),
-                0 0 15px var(--glow-color);
+                0 0 7px var(--glow-color), 
+                0 0 7px rgba(230, 230, 250, 0.4); 
         }
 
         #clock {
-            font-family: 'Orbitron', monospace; 
-            font-size: 3.5vw; 
-            font-weight: 500; 
-            letter-spacing: 0.1vw; 
-            
-            /* ⭐ MODIFICATO: Altezza a -10vh e rotazione a -7deg ⭐ */
-            transform: rotate(-7deg) translate(-6.0vw, -10vh); 
+            font-family: 'Bitcount Single Ink', monospace; 
+            font-size: var(--clock-size); 
+            font-weight: 700; 
+            letter-spacing: 0.2vw; /* Mantenuto vw, potresti volerlo cambiare in 0.2em se da problemi */
+            line-height: 0.9; 
         }
 
         #greeting {
             font-family: 'Noto Sans JP', sans-serif; 
-            font-size: 0.9vw; 
-            font-weight: 400;
-            
-            /* ⭐ MODIFICATO: Posizione direttamente sotto l'ora (-1.5vh per attaccarlo) ⭐ */
-            margin-top: -1.5vh; 
-            
-            /* Allineato all'orologio con la nuova rotazione */
-            transform: rotate(-7deg) translate(-6.0vw, 0vh); 
-
+            font-size: var(--greeting-size); 
+            font-weight: 700; 
+            margin-top: 0.14em;
             text-shadow: none; 
-            opacity: 0.8;
-        }
-
-        /* --- Media queries (Reattività) --- */
-        @media (max-width: 768px) {
-             .widget-container {
-                 /* ... (altre trasformazioni invariate) ... */
-             }
-             #clock { 
-                 font-size: 6.5vw; 
-                 /* Applichiamo le stesse modifiche di inclinazione e altezza di base */
-                 transform: rotate(-7deg) translate(-6.0vw, -10vh); 
-             }
-             #greeting { 
-                 font-size: 1.8vw; 
-                 /* Aggiustato per schermi più piccoli */
-                 margin-top: -1.5vh; 
-                 transform: rotate(-7deg) translate(-6.0vw, 0vh); 
-             } 
+            opacity: 0.9; 
+            /* Colore del saluto coerente */
+            color: var(--glow-color); 
         }
     </style>
 </head>
 <body>
     <div class="widget-container">
-        <div id="clock" class="digitale-glow"></div>
-        <div id="greeting" class="digitale-glow"></div>
+        <div id="clock-display-area">
+            <div id="clock" class="digitale-glow"></div>
+            <div id="greeting" class="digitale-glow"></div>
+        </div>
     </div>
 
     <script>
-        // ... (Script JavaScript invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('it-IT', { 
@@ -120,9 +147,8 @@
                 minute: '2-digit', 
                 second: '2-digit', 
                 hour12: false
-            }).replace(/\./g, ':'); 
-            
-            document.getElementById('clock').textContent = timeString;
+            });
+            document.getElementById('clock').textContent = timeString.replace(/\./g, ':');
         }
 
         function setGreetingAndNextInterval() {
@@ -159,9 +185,13 @@
             setTimeout(setGreetingAndNextInterval, timeToWait);
         }
 
-        setInterval(updateClock, 1000);
-        updateClock();
-        setGreetingAndNextInterval();
+        function initWidget() {
+            setInterval(updateClock, 1000); 
+            updateClock();
+            setGreetingAndNextInterval(); 
+        }
+
+        initWidget();
     </script>
 </body>
 </html>
