@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Ottimizzato)</title>
+    <title>Widget Orologio Digitale Retro (Versione Finale)</title>
     <style>
         /* Variabili CSS (Colore Bianco/Rosa) */
         :root {
@@ -9,8 +9,9 @@
             --glow-color: #ff3399;   
         }
         
-        /* Font: Russo One per un look segmentato digitale */
-        @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+        /* Font: Orbitron (moderno-digitale) - ottimo sostituto per l'effetto 7-segment su Google Fonts */
+        /* Se vuoi il 7-segment esatto, dovrai caricare un file font esterno come Digital-7 */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
         body {
@@ -34,11 +35,7 @@
             width: 17vw;
             height: 14vh;
             
-            /* ⭐ MODIFICA CHIAVE: CENTRATURA PERFETTA CON FLEXBOX ⭐ */
-            display: flex; 
-            flex-direction: column; /* Impila l'ora e il saluto verticalmente */
-            justify-content: center; /* Centra gli elementi verticalmente */
-            align-items: center; /* Centra gli elementi orizzontalmente */
+            display: block; 
             box-sizing: border-box;
             
             /* Trasformazione 3D principale */
@@ -50,11 +47,11 @@
                 scale(0.85)             
                 translate(15vw, 15vh); 
 
-            /* STILE DEL TESTO */
-            font-family: 'Russo One', 'Noto Sans JP', monospace; 
+            /* ⭐ MODIFICA FONT: Usiamo Orbitron per un look digitale nitido ⭐ */
+            font-family: 'Orbitron', monospace; 
             color: var(--display-color); 
 
-            /* EFFETTO GLOW */
+            /* EFFETTO GLOW (lasciato invariato) */
             text-shadow:
                 0 0 3px rgba(255, 255, 255, 0.9), 
                 0 0 10px var(--glow-color),
@@ -62,34 +59,39 @@
         }
 
         #clock {
-            /* Rimosso posizionamento assoluto. Flexbox gestisce l'ancoraggio. */
-            position: relative; 
+            position: absolute;
+            top: 50%; /* Ancoraggio al centro verticale */
+            left: 50%; /* Ancoraggio al centro orizzontale */
             
             font-size: 3.5vw; 
-            font-weight: 400; 
+            font-weight: 500; /* Leggermente più spesso per Orbitron */
             line-height: 1;
             white-space: nowrap;
             
-            /* Manteniamo solo la rotazione e un piccolo aggiustamento di precisione */
-            transform: translate(0.4vw, -0.4vh) rotate(-7deg); 
+            /* ⭐ NUOVO POSIZIONAMENTO CLOCK: Allineato con l'ultima immagine ⭐ */
+            transform: 
+                translate(-50%, -50%) 
+                translate(-0.1vw, -0.6vh) /* Spostamento affinato per l'ora */
+                rotate(-7deg); 
             letter-spacing: 0.1vw; 
-            
-            /* ⭐ NUOVO: Spazio sotto l'ora per abbassare il testo giapponese ⭐ */
-            margin-bottom: 0.8vh; /* Regola questo valore per più o meno spazio */
         }
 
         #greeting {
-            /* Rimosso posizionamento assoluto. Flexbox gestisce l'ancoraggio. */
-            position: relative;
+            position: absolute;
+            top: 50%; /* Ancoraggio al centro verticale */
+            left: 50%; /* Ancoraggio al centro orizzontale */
             
             font-size: 0.9vw; 
             white-space: nowrap;
             font-weight: 400;
             line-height: 1;
-            font-family: 'Noto Sans JP', sans-serif;
+            font-family: 'Noto Sans JP', sans-serif; /* Manteniamo Noto Sans per il giapponese */
             
-            /* Manteniamo solo la rotazione e un piccolo aggiustamento di precisione */
-            transform: translate(-0.5vw, 0.5vh) rotate(-7deg); 
+            /* ⭐ NUOVO POSIZIONAMENTO SALUTO: Posizionato sotto l'ora con meno spazio ⭐ */
+            transform: 
+                translate(-50%, -50%) 
+                translate(-0.1vw, 2.0vh) /* Spostamento affinato per il saluto */
+                rotate(-7deg); 
         }
 
         /* --- Media queries (Reattività) --- */
@@ -109,12 +111,17 @@
             }
             #clock { 
                 font-size: 6.5vw; 
-                transform: translate(0.4vw, -0.4vh) rotate(-7deg); 
-                margin-bottom: 1.0vh; /* Aggiustamento per mobile */
+                transform: 
+                    translate(-50%, -50%) 
+                    translate(-0.3vw, -1vh) /* Aggiustamento mobile per l'ora */
+                    rotate(-7deg); 
             }
             #greeting { 
                 font-size: 1.8vw; 
-                transform: translate(-0.5vw, 0.5vh) rotate(-7deg); 
+                transform: 
+                    translate(-50%, -50%) 
+                    translate(-0.3vw, 3.5vh) /* Aggiustamento mobile per il saluto */
+                    rotate(-7deg); 
             } 
         }
     </style>
@@ -126,6 +133,7 @@
     </div>
 
     <script>
+        // ... (Il tuo script JavaScript è stato lasciato invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = [
