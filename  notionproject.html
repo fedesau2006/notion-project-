@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            /* Immagine di sfondo fornita dall'utente */
+            background-image: url('https://user-images.githubusercontent.com/152342935/295995252-a548c772-23c3-424a-95a7-ab00f0cf98a6.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #f0f0f0; /* Colore di fallback chiaro/bianco */
+            
+            /* Stile per l'intero contenitore del widget */
+            font-family: 'VT323', monospace; /* Font digitale per tutto il testo */
+            color: #00BFFF; /* Blu 'Deep Sky Blue' per tutto il testo */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7), 0 0 5px #00BFFF; /* Ombra e glow blu */
+            
+            display: flex;
+            flex-direction: column; /* Impila gli elementi verticalmente */
+            justify-content: center; /* Centra orizzontalmente */
+            align-items: center; /* Centra verticalmente */
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            
+            /* Spostamento del contenitore generale per allinearlo al display della sveglia */
+            /* Questi valori sono stati ottimizzati per l'immagine fornita dall'utente */
+            padding-bottom: 7.5vh; /* Sposta il blocco complessivo verso l'alto */
+            padding-right: 1.5vw;  /* Sposta il blocco complessivo a destra */
+            box-sizing: border-box; 
+        }
+        #clock {
+            font-size: 3.2em; /* Dimensione dell'ora */
+            font-weight: bold;
+            line-height: 1; /* Rimuove spazi extra */
+            margin-bottom: 5px; /* Spazio tra ora e scritta */
+        }
+        #greeting {
+            font-size: 1.2em; /* Dimensione della scritta "Buongiorno" */
+            line-height: 1;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="clock"></div>
+    <div id="greeting">おはよう</div> <script>
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('clock').textContent = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
