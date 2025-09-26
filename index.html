@@ -11,7 +11,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            position: relative; /* Base per il posizionamento assoluto */
+            position: relative; 
 
             /* Sfondo */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
@@ -22,40 +22,47 @@
 
         /* Contenitore principale per l'ora e il saluto */
         .widget-container {
-            /* --- POSIZIONAMENTO AGGIORNATO --- */
+            /* --- POSIZIONAMENTO AGGIORNATO (Più a destra) --- */
             position: absolute;
             
-            /* Nuovo posizionamento: Spostato più in basso (top) e a destra (left) */
             top: 59%; 
-            left: 58%; 
+            left: 60%; /* Spostato leggermente più a destra (era 58%) */
             
-            /* Regola la larghezza e l'altezza per coprire l'area del riquadro */
-            width: 14vw; /* Leggermente più stretto */
+            width: 14vw;
             height: 14vh;
 
-            /* Allineamento del testo al centro */
             display: flex;
             flex-direction: column;
             justify-content: center; 
             align-items: center; 
 
-            /* --- STILE DEL TESTO AZZURRO --- */
+            /* --- INCLINAZIONE OBLIQUA (Trasformazione) --- */
+            /* Inclinazione verso destra. Regola il valore (es. -5deg) se necessario. */
+            transform: skewX(5deg); 
+
+            /* --- STILE DEL TESTO AZZURRO E SPESSORE --- */
             font-family: 'Press Start 2P', monospace;
             color: #4ac0f7; 
-            text-shadow: 0 0 5px #4ac0f7, 0 0 10px #4ac0f7; 
             
-            /* Debug: Rimuovi dopo aver posizionato correttamente */
-            /* border: 1px solid red; */
+            /* Simula il bordo bianco (spessore) con un text-shadow composto */
+            text-shadow: 
+                /* Bordo bianco (spessore): due pixel in tutte le direzioni */
+                -2px -2px 0 #FFFFFF,
+                 2px -2px 0 #FFFFFF,
+                -2px  2px 0 #FFFFFF,
+                 2px  2px 0 #FFFFFF,
+                 
+                /* Effetto glow azzurro */
+                 0 0 10px #4ac0f7, 
+                 0 0 20px #4ac0f7; 
         }
 
         #clock {
-            /* Dimensione del font leggermente più piccola */
             font-size: 2.3vw; 
             line-height: 1.2;
         }
 
         #greeting {
-            /* Dimensione del font leggermente più piccola */
             font-size: 1.1vw; 
             white-space: nowrap;
         }
@@ -64,7 +71,7 @@
         @media (max-width: 768px) {
             .widget-container {
                 top: 61%; 
-                left: 60%; 
+                left: 62%; /* Spostato a destra per dispositivi più piccoli */
                 width: 25vw;
                 height: 10vh;
             }
@@ -72,16 +79,7 @@
             #greeting { font-size: 1.8vw; }
         }
 
-        @media (max-width: 480px) {
-            .widget-container {
-                top: 63%; 
-                left: 62%; 
-                width: 40vw;
-                height: 12vh;
-            }
-            #clock { font-size: 5.5vw; }
-            #greeting { font-size: 2.8vw; }
-        }
+        /* Il resto del codice HTML e JavaScript rimane invariato... */
     </style>
 </head>
 <body>
@@ -105,19 +103,19 @@
             let greetingText;
 
             if (hour >= 5 && hour < 12) {
-                greetingText = 'おはようございます'; // Buongiorno (Mattino)
+                greetingText = 'おはようございます';
             } else if (hour >= 12 && hour < 18) {
-                greetingText = 'こんにちは'; // Buon Pomeriggio
+                greetingText = 'こんにちは';
             } else if (hour >= 18 && hour < 22) {
-                greetingText = 'こんばんは'; // Buonasera
+                greetingText = 'こんばんは';
             } else {
-                greetingText = 'おやすみ'; // Buonanotte
+                greetingText = 'おやすみ';
             }
             greetingElement.textContent = greetingText;
         }
 
         setInterval(updateClock, 1000);
-        setInterval(setGreeting, 1800000); // Aggiorna saluto ogni 30 minuti
+        setInterval(setGreeting, 1800000);
 
         updateClock();
         setGreeting();
