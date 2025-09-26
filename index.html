@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Finalizzato)</title>
+    <title>Widget Orologio Digitale Retro (Riparazione Posizionamento)</title>
     <style>
-        /* Variabili CSS */
+        /* Variabili CSS (Colore Bianco/Rosa) */
         :root {
-            /* Colore bianco tendente al rosa chiaro per l'aspetto digitale */
             --display-color: #ffe6f2; 
-            /* Bagliore rosa acceso */
             --glow-color: #ff3399;    
         }
         
-        /* Font: Russo One per un look segmentato digitale come richiesto */
+        /* Font: Russo One per un look segmentato digitale */
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
-        /* Mantengo Noto Sans JP per il saluto */
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
         body {
@@ -49,10 +46,10 @@
                 translate(15vw, 15vh); 
 
             /* STILE DEL TESTO */
-            font-family: 'Russo One', 'Noto Sans JP', monospace; /* Nuovo font */
+            font-family: 'Russo One', 'Noto Sans JP', monospace; 
             color: var(--display-color); 
 
-            /* EFFETTO GLOW (Rosa acceso) */
+            /* EFFETTO GLOW */
             text-shadow:
                 0 0 3px rgba(255, 255, 255, 0.9), 
                 0 0 10px var(--glow-color),
@@ -60,13 +57,13 @@
         }
 
         #clock {
-            /* POSIZIONAMENTO FINALE: Perfettamente in alto a sinistra */
+            /* POSIZIONAMENTO CORRETTO: Riportato in alto a sinistra, visibile */
             position: absolute;
-            top: 5%; /* Leggero aggiustamento verso il basso per allineamento */
-            left: 0%; 
+            top: 20%; /* Aumentato per essere visibile dall'alto */
+            left: 10%; /* Aumentato per essere visibile da sinistra */
             
             font-size: 3.5vw; 
-            font-weight: 400; /* Russo One è già spesso di suo */
+            font-weight: 400; 
             line-height: 1;
             white-space: nowrap;
             
@@ -76,10 +73,10 @@
         }
 
         #greeting {
-            /* Posizionamento del saluto (adattato) */
+            /* Posizionamento del saluto (aggiornato per coerenza) */
             position: absolute;
-            top: 65%; 
-            right: 5%; 
+            top: 70%; /* Aggiustato leggermente per essere più in basso */
+            right: 15%; /* Spostato più a sinistra per non uscire */
             
             font-size: 1.0vw; 
             white-space: nowrap;
@@ -108,13 +105,13 @@
             }
             #clock { 
                 font-size: 6.5vw; 
-                top: 5%; 
-                left: 0;
+                top: 20%; /* Aggiustato */
+                left: 10%; /* Aggiustato */
             }
             #greeting { 
                 font-size: 2.0vw; 
                 top: 60%; 
-                right: 0;
+                right: 10%; /* Aggiustato */
             } 
         }
     </style>
@@ -126,7 +123,7 @@
     </div>
 
     <script>
-        // Funzione per l'aggiornamento dell'orologio
+        // ... (Script JS lasciato invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = [
@@ -138,7 +135,6 @@
             document.getElementById('clock').textContent = timeString;
         }
 
-        // Funzione per l'aggiornamento del saluto
         function setGreetingAndNextInterval() {
             const now = new Date();
             const hour = now.getHours();
