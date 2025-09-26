@@ -1,65 +1,127 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Widget Orologio Personalizzato</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
         body {
-            /* Posiziona l'orologio e il saluto al centro della pagina */
+            /* Stile per l'immagine di sfondo */
+            background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            
+            /* Impostazioni del corpo per il layout */
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenitore principale per centrare il contenuto del widget */
+        .widget-container {
+            /* Posiziona il contenitore del testo all'interno dell'area dello schermo */
+            position: absolute;
+            top: 50%; /* Posizionato a metà dell'altezza */
+            left: 50%; /* Posizionato a metà della larghezza */
+            transform: translate(-50%, -50%); /* Centra perfettamente l'elemento */
+            width: 15vw; /* Larghezza del riquadro, regolabile */
+            height: 8vh; /* Altezza del riquadro, regolabile */
+            
+            /* Allineamento del testo al centro */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Fa in modo che il contenitore occupi l'intera altezza della finestra */
 
-            /* Stile generale del testo */
+            /* Stile del testo */
             font-family: 'Press Start 2P', monospace;
-            color: #00FF00; /* Verde neon */
-            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
-
-            /* Immagine di sfondo */
-            background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
-
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+            color: #4ac0f7; /* Colore azzurro come richiesto */
+            text-shadow: 0 0 5px #4ac0f7, 0 0 10px #4ac0f7; /* Effetto luminoso azzurro */
         }
 
         #clock {
-            font-size: 5vh;
-            margin-bottom: 5px;
+            font-size: 2.5vw; /* Dimensione dell'ora relativa alla larghezza del viewport */
+            line-height: 1.2;
         }
 
         #greeting {
-            font-size: 2.5vh;
+            font-size: 1.2vw; /* Dimensione del saluto relativa alla larghezza del viewport */
+            white-space: nowrap; /* Impedisce che il testo vada a capo */
         }
 
-        @media (max-width: 600px) {
+        /* Media queries per la reattività su schermi più piccoli */
+        @media (max-width: 768px) {
+            .widget-container {
+                width: 25vw;
+                height: 10vh;
+            }
             #clock {
-                font-size: 4vh;
+                font-size: 4vw;
             }
             #greeting {
-                font-size: 2vh;
+                font-size: 2vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .widget-container {
+                width: 40vw;
+                height: 12vh;
+            }
+            #clock {
+                font-size: 6vw;
+            }
+            #greeting {
+                font-size: 3vw;
             }
         }
     </style>
 </head>
 <body>
-    <div id="clock"></div>
-    <div id="greeting">おはよう</div>
+    <div class="widget-container">
+        <div id="clock"></div>
+        <div id="greeting">おはようございます</div>
+    </div>
+
     <script>
         function updateClock() {
             const now = new Date();
-            let hours = now.getHours();
+            const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const seconds = now.getSeconds().toString().padStart(2, '0');
-            
-            document.getElementById('clock').textContent = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
         }
+
+        function setGreeting() {
+            const greetingElement = document.getElementById('greeting');
+            const hour = new Date().getHours();
+            let greetingText;
+
+            if (hour >= 5 && hour < 12) {
+                greetingText = 'おはようございます'; // Mattino
+            } else if (hour >= 12 && hour < 18) {
+                greetingText = 'こんにちは'; // Pomeriggio
+            } else if (hour >= 18 && hour < 22) {
+                greetingText = 'こんばんは'; // Sera
+            } else {
+                greetingText = 'おやすみ'; // Notte
+            }
+            greetingElement.textContent = greetingText;
+        }
+
+        // Aggiorna l'ora ogni secondo
         setInterval(updateClock, 1000);
+        
+        // Aggiorna il saluto all'avvio e ogni 30 minuti
+        setGreeting();
+        setInterval(setGreeting, 1800000); // 30 minuti
+
+        // Chiamate iniziali
         updateClock();
     </script>
 </body>
