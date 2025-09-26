@@ -7,37 +7,38 @@
         body {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             overflow: hidden;
             font-family: 'Press Start 2P', monospace;
-        }
-
-        /* Immagine di sfondo */
-        body {
+            color: #00FF00;
+            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
+            position: relative; /* Rende il corpo un punto di riferimento per il posizionamento */
+        }
+
+        #widget-container {
+            position: absolute; /* Posiziona il contenitore in base al corpo */
+            top: 45%; /* Regola il posizionamento verticale */
+            left: 50%; /* Regola il posizionamento orizzontale */
+            transform: translate(-50%, -50%); /* Centra il contenitore in base alle sue dimensioni */
+            display: flex;
+            flex-direction: column; /* Impila gli elementi verticalmente */
+            align-items: center; /* Centra gli elementi orizzontalmente */
+            width: 100%;
         }
 
         #clock {
-            position: relative;
-            text-align: center;
-            width: 100%;
-            color: #00FF00; /* Colore verde neon */
             font-size: 5vh;
-            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00; /* Effetto illuminato */
+            text-align: center;
         }
 
         #greeting {
-            position: relative;
-            text-align: center;
-            color: #00FF00;
             font-size: 2.5vh;
-            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00, 0 0 30px #00FF00;
+            text-align: center;
+            margin-top: 10px;
         }
 
         @media (max-width: 600px) {
@@ -51,8 +52,10 @@
     </style>
 </head>
 <body>
-    <div id="clock"></div>
-    <div id="greeting">おはよう</div>
+    <div id="widget-container">
+        <div id="clock"></div>
+        <div id="greeting">おはよう</div>
+    </div>
     <script>
         function updateClock() {
             const now = new Date();
