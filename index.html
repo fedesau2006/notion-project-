@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Centratura V6)</title>
+    <title>Widget Orologio Digitale Retro (Centratura V5)</title>
     <style>
         /* Variabili CSS (Colore Bianco/Rosa) */
         :root {
@@ -67,10 +67,10 @@
             line-height: 1;
             white-space: nowrap;
             
-            /* 🚀 MODIFICATO: Centratura principale e rotazione */
+            /* POSIZIONAMENTO CLOCK: Leggermente a destra/sotto per la prospettiva */
             transform: 
                 translate(-50%, -50%) 
-                translate(0.3vw, -1.2vh) /* 👈 Spostamento finale per allineamento visivo (testato) */
+                translate(0.5vw, 0.0vh) 
                 rotate(-7deg); 
             letter-spacing: 0.1vw; 
         }
@@ -86,10 +86,10 @@
             line-height: 1;
             font-family: 'Noto Sans JP', sans-serif; 
             
-            /* 🚀 MODIFICATO: Centratura principale e rotazione */
+            /* ⭐ MODIFICATO: AUMENTO LA DISTANZA (Y è ora 3.5vh) e aggiusto l'allineamento (X è ora 0.4vw) ⭐ */
             transform: 
                 translate(-50%, -50%) 
-                translate(0.1vw, 2.5vh) /* 👈 Spostamento finale per allineamento visivo (testato) */
+                translate(0.4vw, 3.5vh) /* Spostamento orizzontale a 0.4vw, verticale a 3.5vh */
                 rotate(-7deg); 
         }
 
@@ -112,14 +112,14 @@
                 font-size: 6.5vw; 
                 transform: 
                     translate(-50%, -50%) 
-                    translate(0.5vw, -1.8vh) /* Aggiustamento per mobile */
+                    translate(1vw, 0vh) 
                     rotate(-7deg); 
             }
             #greeting { 
                 font-size: 1.8vw; 
                 transform: 
                     translate(-50%, -50%) 
-                    translate(0.5vw, 4vh) /* Aggiustamento distanza verticale per mobile */
+                    translate(0.8vw, 6vh) /* Aumento distanza verticale per mobile */
                     rotate(-7deg); 
             } 
         }
@@ -132,6 +132,7 @@
     </div>
 
     <script>
+        // ... (Script JavaScript lasciato invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = [
