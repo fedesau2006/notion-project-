@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Centratura V5)</title>
+    <title>Widget Orologio Digitale Retro (Centratura V6 Ottimizzata)</title>
     <style>
         /* Variabili CSS (Colore Bianco/Rosa) */
         :root {
-            --display-color: #ffe6f2; 
-            --glow-color: #ff3399;   
+            --display-color: #ffe6f2; /* Colore del testo (bianco-rosato chiaro) */
+            --glow-color: #ff3399;   /* Colore del bagliore (rosa acceso) */
+            /* Aggiunta di un colore per l'ombra interna che simula lo schermo spento/scuro */
+            --screen-shadow: rgba(0, 0, 0, 0.4); 
         }
         
         /* Font: Orbitron (digitale moderno) e Noto Sans JP (giapponese) */
+        /* Orbitron rimane per il look 'digitale moderno' */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
         body {
+            /* Manteniamo body come contenitore del background */
             height: 100vh;
             margin: 0;
             padding: 0;
@@ -26,76 +30,83 @@
         }
 
         .widget-container {
-            /* --- POSIZIONAMENTO ESTERNO (Lasciato intatto) --- */
+            /* Contenitore che definisce l'area dello schermo e applica la trasformazione 3D */
             position: absolute;
             top: 55%; 
             left: 56.5%; 
             
-            width: 17vw;
-            height: 14vh;
+            /* Dimensioni del contenitore adattate leggermente per il quadrante (Desktop) */
+            width: 17vw; 
+            height: 14vh; 
             
             display: block; 
             box-sizing: border-box;
             
-            /* Trasformazione 3D principale */
+            /* Trasformazione 3D principale (rimasta come l'hai definita) */
             transform: 
                 translate(-50%, -50%) 
-                rotateX(4deg)           
+                rotateX(4deg)          
                 rotateY(-3deg)          
                 skewX(7deg)             
                 scale(0.85)             
                 translate(15vw, 15vh); 
 
-            /* STILE DEL TESTO */
-            font-family: 'Orbitron', monospace; 
-            color: var(--display-color); 
+            /* Aggiunge una leggera ombra interna per simulare la profondità dello schermo */
+            box-shadow: inset 0 0 10px var(--screen-shadow);
+        }
 
-            /* EFFETTO GLOW */
+        #clock, #greeting {
+            /* Reset del posizionamento all'interno del contenitore */
+            position: absolute;
+            top: 50%; 
+            left: 50%; 
+            white-space: nowrap;
+            color: var(--display-color);
+            line-height: 1;
+
+            /* EFFETTO GLOW e STILE DIGITALE */
             text-shadow:
-                0 0 3px rgba(255, 255, 255, 0.9), 
-                0 0 10px var(--glow-color),
-                0 0 20px var(--glow-color);
+                /* Ombra più scura per un effetto "digitale" più netto */
+                1px 1px 0px rgba(0, 0, 0, 0.2), 
+                /* Bagliore (Glow) */
+                0 0 5px var(--glow-color),
+                0 0 15px var(--glow-color);
         }
 
         #clock {
-            position: absolute;
-            top: 50%; 
-            left: 50%; 
-            
+            font-family: 'Orbitron', monospace; 
             font-size: 3.5vw; 
             font-weight: 500; 
-            line-height: 1;
-            white-space: nowrap;
+            letter-spacing: 0.1vw; 
             
-            /* POSIZIONAMENTO CLOCK: Leggermente a destra/sotto per la prospettiva */
+            /* ✨ MODIFICATO: Fine-tuning per l'allineamento all'interno dello schermo ✨ */
             transform: 
                 translate(-50%, -50%) 
-                translate(0.5vw, 0.0vh) 
+                translate(0.5vw, 0.0vh) /* Aggiusta leggermente a destra/sotto per la prospettiva */
                 rotate(-7deg); 
-            letter-spacing: 0.1vw; 
         }
 
         #greeting {
-            position: absolute;
-            top: 50%; 
-            left: 50%; 
-            
-            font-size: 0.9vw; 
-            white-space: nowrap;
-            font-weight: 400;
-            line-height: 1;
             font-family: 'Noto Sans JP', sans-serif; 
+            font-size: 0.9vw; 
+            font-weight: 400;
             
-            /* ⭐ MODIFICATO: AUMENTO LA DISTANZA (Y è ora 3.5vh) e aggiusto l'allineamento (X è ora 0.4vw) ⭐ */
+            /* ✨ MODIFICATO: Ottimizzato il posizionamento sotto l'orario ✨ */
             transform: 
                 translate(-50%, -50%) 
-                translate(0.4vw, 3.5vh) /* Spostamento orizzontale a 0.4vw, verticale a 3.5vh */
+                translate(0.3vw, 4.0vh) /* Sposta a 4.0vh (più in basso) e 0.3vw (leggermente a sinistra) */
                 rotate(-7deg); 
+            
+            /* Rimuove l'ombra/glow per un look meno dominante */
+            text-shadow: none; 
+            color: var(--display-color);
+            opacity: 0.8;
         }
 
         /* --- Media queries (Reattività) --- */
         @media (max-width: 768px) {
             .widget-container {
+                /* Aggiornamenti per schermi piccoli (mobile/tablet) */
                 top: 61%;
                 left: 60%;
                 width: 30vw;
@@ -107,19 +118,20 @@
                     skewX(7deg) 
                     scale(1.0) 
                     translate(15vw, 15vh); 
+                box-shadow: inset 0 0 10px var(--screen-shadow);
             }
             #clock { 
                 font-size: 6.5vw; 
                 transform: 
                     translate(-50%, -50%) 
-                    translate(1vw, 0vh) 
+                    translate(1vw, 0vh) /* Aggiustato per la dimensione mobile */
                     rotate(-7deg); 
             }
             #greeting { 
                 font-size: 1.8vw; 
                 transform: 
                     translate(-50%, -50%) 
-                    translate(0.8vw, 6vh) /* Aumento distanza verticale per mobile */
+                    translate(0.5vw, 6.5vh) /* Aggiustato per la dimensione mobile */
                     rotate(-7deg); 
             } 
         }
@@ -132,14 +144,15 @@
     </div>
 
     <script>
-        // ... (Script JavaScript lasciato invariato) ...
         function updateClock() {
             const now = new Date();
-            const timeString = [
-                now.getHours(),
-                now.getMinutes(),
-                now.getSeconds()
-            ].map(n => n.toString().padStart(2, '0')).join(':');
+            // Aggiunto l'uso di toLocaleTimeString per una formattazione dell'ora più robusta
+            const timeString = now.toLocaleTimeString('it-IT', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit', 
+                hour12: false // Assicura il formato 24 ore
+            }).replace(/\./g, ':'); // Sostituisce eventuali punti con i due punti (per consistenza)
             
             document.getElementById('clock').textContent = timeString;
         }
@@ -181,6 +194,7 @@
             setTimeout(setGreetingAndNextInterval, timeToWait);
         }
 
+        // Avvio degli intervalli
         setInterval(updateClock, 1000);
         updateClock();
         setGreetingAndNextInterval();
