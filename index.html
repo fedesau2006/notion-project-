@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro</title>
+    <title>Widget Orologio Digitale Retro (Finalizzato)</title>
     <style>
-        /* Variabile CSS per la coerenza del colore */
+        /* Variabili CSS: Cambiato il colore da azzurro a bianco */
         :root {
-            --display-color: #4ac0f7; /* Azzurro brillante */
+            --display-color: #FFFFFF; /* Bianco puro per un look display retroilluminato */
+            --glow-color: #4ac0f7;    /* Azzurro per l'effetto glow attorno */
         }
         
         /* Importazione del font digitale/retro */
@@ -17,8 +18,6 @@
             padding: 0;
             position: relative;
             
-            /* Rimosso 'overflow: hidden' per una migliore integrazione nell'iframe di Notion */
-
             /* Sfondo */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
             background-size: cover;
@@ -27,10 +26,11 @@
         }
 
         .widget-container {
-            /* POSIZIONAMENTO E DIMENSIONAMENTO OPTIMIZZATO per il quadrante */
+            /* --- NUOVE REGOLAZIONI DI POSIZIONE --- */
             position: absolute;
-            top: 57%;
-            left: 56.5%; 
+            /* Ho spostato 'top' più in alto e 'left' più a sinistra per centrare */
+            top: 55%;    
+            left: 57%; 
             width: 17vw;
             height: 14vh; 
 
@@ -41,19 +41,20 @@
             line-height: 1; 
             box-sizing: border-box;
 
-            /* INCLINAZIONE OBLIQUA e SCALA */
-            /* skewX(5deg) per l'inclinazione, scale(0.9) per adattare la dimensione */
-            transform: skewX(5deg) scale(0.9);
+            /* --- NUOVE REGOLAZIONI DI TRASFORMAZIONE (3D) --- */
+            /* skewX per l'inclinazione (5deg), scale(0.9) per la dimensione. */
+            /* translate(X, Y) per sollevare/spostare finemente. */
+            transform: skewX(5deg) scale(0.9) translate(-10px, -5px);
 
-            /* STILE DEL TESTO (VT323) */
+            /* STILE DEL TESTO */
             font-family: 'VT323', monospace; 
-            color: var(--display-color);
+            color: var(--display-color); /* Ora Bianco */
 
-            /* EFFETTO GLOW */
+            /* EFFETTO GLOW (Ora il glow è azzurro, ma il testo è bianco) */
             text-shadow:
-                0 0 5px rgba(255, 255, 255, 0.6),
-                0 0 15px var(--display-color),
-                0 0 30px var(--display-color);
+                0 0 5px rgba(255, 255, 255, 0.9), /* Luce bianca più intensa */
+                0 0 10px var(--glow-color),
+                0 0 20px var(--glow-color); 
         }
 
         #clock {
@@ -87,10 +88,9 @@
     </div>
 
     <script>
-        // Funzione per l'aggiornamento dell'orologio (Pulizia 2B)
+        // Funzione per l'aggiornamento dell'orologio (Pulizia)
         function updateClock() {
             const now = new Date();
-            // Metodo conciso per formattare ore, minuti e secondi con zero iniziale
             const timeString = [
                 now.getHours(),
                 now.getMinutes(),
@@ -108,19 +108,19 @@
             let greetingText;
             let nextHourChange;
             
-            // Logica del saluto e definizione dell'ora di cambio
+            // Logica del saluto
             if (hour >= 5 && hour < 12) {
                 greetingText = 'おはようございます';
-                nextHourChange = 12; // Prossimo cambio a mezzogiorno
+                nextHourChange = 12;
             } else if (hour >= 12 && hour < 18) {
                 greetingText = 'こんにちは';
-                nextHourChange = 18; // Prossimo cambio alle 18:00
+                nextHourChange = 18;
             } else if (hour >= 18 && hour < 22) {
                 greetingText = 'こんばんは';
-                nextHourChange = 22; // Prossimo cambio alle 22:00
+                nextHourChange = 22;
             } else {
                 greetingText = 'おやすみ';
-                nextHourChange = 24 + 5; // Prossimo cambio alle 05:00 del giorno dopo
+                nextHourChange = 24 + 5;
             }
             
             greetingElement.textContent = greetingText;
@@ -129,26 +129,20 @@
             const nextChangeTime = new Date(now);
             
             if (nextHourChange > 23) {
-                nextChangeTime.setDate(now.getDate() + 1); // Passa al giorno successivo
+                nextChangeTime.setDate(now.getDate() + 1);
                 nextHourChange -= 24;
             }
             
-            // Imposta l'ora del prossimo cambio (con un piccolo margine di 5 secondi)
             nextChangeTime.setHours(nextHourChange, 0, 5, 0); 
             
             const timeToWait = nextChangeTime.getTime() - now.getTime();
             
-            // Imposta il timeout esatto per il prossimo cambio di saluto
             setTimeout(setGreetingAndNextInterval, timeToWait);
         }
 
         /* --- Inizializzazione --- */
-        
-        // Imposta l'orologio (aggiornamento ogni secondo)
         setInterval(updateClock, 1000); 
-        updateClock(); // Chiama subito per evitare un ritardo di 1 secondo
-
-        // Imposta il saluto e calcola quando aggiornarlo nuovamente (più robusto)
+        updateClock(); 
         setGreetingAndNextInterval();
     </script>
 </body>
