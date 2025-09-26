@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Centratura V10 - Correzione Forma)</title>
+    <title>Widget Orologio Digitale Retro (Centratura V11 - Calibrazione Finale)</title>
     <style>
         /* Variabili CSS */
         :root {
@@ -26,17 +26,14 @@
         }
 
         .widget-container {
-            /* --- POSIZIONAMENTO E TRASFORMAZIONE --- */
+            /* --- POSIZIONAMENTO E TRASFORMAZIONE (Invariato) --- */
             position: absolute;
             top: 55%; 
             left: 56.5%; 
             
-            /* ⭐ RIMOSSO: width: 17vw; e height: 14vh; ⭐ */
-            /* Lasciamo che il contenuto (clock e greeting) definisca la dimensione. */
-            
             box-sizing: border-box;
             
-            /* Tutte le trasformazioni 3D/prospettiche (Invariate) */
+            /* Tutte le trasformazioni 3D/prospettiche */
             transform: 
                 translate(-50%, -50%) 
                 rotateX(4deg)          
@@ -45,17 +42,13 @@
                 scale(0.85)             
                 translate(15vw, 15vh); 
 
-            /* ⭐ RIMOSSO: box-shadow: inset 0 0 10px var(--screen-shadow); ⭐ */
-            /* Questo eliminava l'effetto di "schermo scuro" sul contenitore, che creava la forma. */
-
-            /* Manteniamo il flexbox per il posizionamento relativo del testo */
+            /* Flexbox per centrare orizzontalmente e verticalmente */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* L'altezza deve essere solo quella minima per contenere il testo */
-            height: auto; 
             width: auto;
+            height: auto;
         }
 
         .digitale-glow {
@@ -74,9 +67,9 @@
             font-weight: 500; 
             letter-spacing: 0.1vw; 
             
-            /* ⭐ NUOVO FINE-TUNING ⭐: Più a sinistra e leggermente in alto */
-            transform: rotate(-7deg) translate(-1.5vw, -1.0vh); 
-            /* Spostato a -1.5vw (più a sinistra) e -1.0vh (più in alto) */
+            /* ⭐ NUOVA CALIBRAZIONE ⭐ */
+            transform: rotate(-7deg) translate(-1.8vw, -1.5vh); 
+            /* Da -1.5vw a -1.8vw (più a sinistra) e da -1.0vh a -1.5vh (più in alto) */
         }
 
         #greeting {
@@ -85,10 +78,11 @@
             font-weight: 400;
             
             /* Posizionamento sotto l'orario */
-            margin-top: 0.8vh; /* Ridotto leggermente lo spazio tra orario e saluto */
+            margin-top: 0.8vh; 
             
             /* Allineato all'orologio */
-            transform: rotate(-7deg) translate(-1.5vw, 0vh); 
+            transform: rotate(-7deg) translate(-1.8vw, 0vh); 
+            /* Mantenuto allineato a -1.8vw */
 
             text-shadow: none; 
             opacity: 0.8;
@@ -96,21 +90,18 @@
 
         /* --- Media queries (Reattività) --- */
         @media (max-width: 768px) {
-             /* Ho applicato le stesse modifiche di spostamento anche qui per consistenza */
+             .widget-container {
+                /* ... (altre trasformazioni invariate) ... */
+             }
              #clock { 
                  font-size: 6.5vw; 
-                 transform: rotate(-7deg) translate(-1.5vw, -1.0vh); 
+                 transform: rotate(-7deg) translate(-1.8vw, -1.5vh); 
              }
              #greeting { 
                  font-size: 1.8vw; 
                  margin-top: 1.5vh; 
-                 transform: rotate(-7deg) translate(-1.5vw, 0vh); 
+                 transform: rotate(-7deg) translate(-1.8vw, 0vh); 
              } 
-             .widget-container {
-                 /* Assicuriamo che su mobile non ci siano dimensioni fisse */
-                 width: auto;
-                 height: auto;
-             }
         }
     </style>
 </head>
@@ -121,7 +112,6 @@
     </div>
 
     <script>
-        // ... (Script JavaScript invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = now.toLocaleTimeString('it-IT', { 
