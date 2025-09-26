@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Widget Orologio Digitale Retro (Versione Finale)</title>
+    <title>Widget Orologio Digitale Retro (Centratura V5)</title>
     <style>
         /* Variabili CSS (Colore Bianco/Rosa) */
         :root {
@@ -9,8 +9,7 @@
             --glow-color: #ff3399;   
         }
         
-        /* Font: Orbitron (moderno-digitale) - ottimo sostituto per l'effetto 7-segment su Google Fonts */
-        /* Se vuoi il 7-segment esatto, dovrai caricare un file font esterno come Digital-7 */
+        /* Font: Orbitron (digitale moderno) e Noto Sans JP (giapponese) */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400&display=swap');
 
@@ -47,11 +46,11 @@
                 scale(0.85)             
                 translate(15vw, 15vh); 
 
-            /* ⭐ MODIFICA FONT: Usiamo Orbitron per un look digitale nitido ⭐ */
+            /* STILE DEL TESTO */
             font-family: 'Orbitron', monospace; 
             color: var(--display-color); 
 
-            /* EFFETTO GLOW (lasciato invariato) */
+            /* EFFETTO GLOW */
             text-shadow:
                 0 0 3px rgba(255, 255, 255, 0.9), 
                 0 0 10px var(--glow-color),
@@ -60,37 +59,37 @@
 
         #clock {
             position: absolute;
-            top: 50%; /* Ancoraggio al centro verticale */
-            left: 50%; /* Ancoraggio al centro orizzontale */
+            top: 50%; 
+            left: 50%; 
             
             font-size: 3.5vw; 
-            font-weight: 500; /* Leggermente più spesso per Orbitron */
+            font-weight: 500; 
             line-height: 1;
             white-space: nowrap;
             
-            /* ⭐ NUOVO POSIZIONAMENTO CLOCK: Allineato con l'ultima immagine ⭐ */
+            /* POSIZIONAMENTO CLOCK: Leggermente a destra/sotto per la prospettiva */
             transform: 
                 translate(-50%, -50%) 
-                translate(-0.1vw, -0.6vh) /* Spostamento affinato per l'ora */
+                translate(0.5vw, 0.0vh) 
                 rotate(-7deg); 
             letter-spacing: 0.1vw; 
         }
 
         #greeting {
             position: absolute;
-            top: 50%; /* Ancoraggio al centro verticale */
-            left: 50%; /* Ancoraggio al centro orizzontale */
+            top: 50%; 
+            left: 50%; 
             
             font-size: 0.9vw; 
             white-space: nowrap;
             font-weight: 400;
             line-height: 1;
-            font-family: 'Noto Sans JP', sans-serif; /* Manteniamo Noto Sans per il giapponese */
+            font-family: 'Noto Sans JP', sans-serif; 
             
-            /* ⭐ NUOVO POSIZIONAMENTO SALUTO: Posizionato sotto l'ora con meno spazio ⭐ */
+            /* ⭐ MODIFICATO: AUMENTO LA DISTANZA (Y è ora 3.5vh) e aggiusto l'allineamento (X è ora 0.4vw) ⭐ */
             transform: 
                 translate(-50%, -50%) 
-                translate(-0.1vw, 2.0vh) /* Spostamento affinato per il saluto */
+                translate(0.4vw, 3.5vh) /* Spostamento orizzontale a 0.4vw, verticale a 3.5vh */
                 rotate(-7deg); 
         }
 
@@ -113,14 +112,14 @@
                 font-size: 6.5vw; 
                 transform: 
                     translate(-50%, -50%) 
-                    translate(-0.3vw, -1vh) /* Aggiustamento mobile per l'ora */
+                    translate(1vw, 0vh) 
                     rotate(-7deg); 
             }
             #greeting { 
                 font-size: 1.8vw; 
                 transform: 
                     translate(-50%, -50%) 
-                    translate(-0.3vw, 3.5vh) /* Aggiustamento mobile per il saluto */
+                    translate(0.8vw, 6vh) /* Aumento distanza verticale per mobile */
                     rotate(-7deg); 
             } 
         }
@@ -133,7 +132,7 @@
     </div>
 
     <script>
-        // ... (Il tuo script JavaScript è stato lasciato invariato) ...
+        // ... (Script JavaScript lasciato invariato) ...
         function updateClock() {
             const now = new Date();
             const timeString = [
