@@ -2,65 +2,98 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Retro Clock Widget Notion (Proporzionale alla background)</title>
+    <title>Retro Clock Widget Notion (Full Screen Adattivo)</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
+    
     <style>
-        :root{
+        /*
+         * Variabili CSS e Valori di Riferimento
+         */
+        :root {
             --display-color: #e6e6fa;
             --glow-color: #e6e6fa;
-            /* Valori di riferimento (dimensione di progetto) */
-            --base-width: 400;    /* px della background di riferimento */
-            --base-height: 280;   /* px della background di riferimento */
-            --base-clock-font: 40;    /* px font quando la frame è base */
-            --base-greeting-font: 20; /* px font quando la frame è base */
+            /* Dimensione della Background di Riferimento */
+            --base-width: 400;      /* px della background di riferimento */
+            --base-height: 280;     /* px della background di riferimento */
+            /* Dimensione Font alla Base-Width di 400px */
+            --base-clock-font: 40;     /* px font quando la frame è base */
+            --base-greeting-font: 20;  /* px font quando la frame è base */
         }
 
-        /* Corpo minimale: l'iframe/Notion controllerà lo spazio esterno */
+        /*
+         * Stili Globali e Corpo: Puliscono lo spazio e forzano l'estensione massima
+         */
         html, body {
             height: 100%;
+            width: 100%;
             margin: 0;
-            background: #222;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* La frame è l'elemento che contiene la background image.
-           Tutto viene scalato con JS rispetto a questa frame. */
-        .widget-frame {
-            width: 100%;                 /* In Notion l'iframe/contesto imposta la larghezza reale */
-            max-width: 800px;            /* limite facoltativo per preview */
-            aspect-ratio: 400 / 280;     /* mantiene la proporzione della background */
-            background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
-            background-size: cover;
-            background-position: center;
-            border-radius: 12px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.18);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 0;
+            background: #222; /* Colore di fallback se l'immagine non copre */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-sizing: border-box;
+            overflow: hidden; /* Evita le barre di scorrimento */
         }
 
-        /* Contenitore interno: occupa la maggior parte della frame e centra il contenuto */
+        /*
+         * La Frame del Widget (Contenitore della Background)
+         */
+        .widget-frame {
+            /* * Queste proprietà forzano l'elemento a coprire la massima area 
+             * possibile (come un <img> con object-fit: contain), 
+             * mantenendo l'aspetto-ratio.
+             */
+            width: 100%;
+            height: 100%;
+            max-width: none; /* Rimosso il limite per la modalità full screen */
+            aspect-ratio: var(--base-width) / var(--base-height);
+            
+            /* Utilizza 'contain' invece di 'cover' per assicurare che 
+               tutta l'immagine sia visibile all'interno del riquadro */
+            background-size: contain; 
+            background-repeat: no-repeat; /* Importante per non ripetere l'immagine */
+            background-position: center;
+            
+            background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
+            
+            border-radius: 0; /* Rimosso il border-radius in modalità full screen */
+            box-shadow: none;
+            position: relative; /* Importante per posizionare l'orologio internamente */
+            overflow: hidden;
+        }
+        
+        /* * Contenitore Interno del Contenuto (Orologio e Greeting) 
+         * * Nota: Queste percentuali (width: 20%, height: 20%) 
+         * devono essere adattate per far combaciare l'orologio 
+         * con lo schermo blu del tuo monitor vintage nell'immagine.
+         */
         .widget-container {
-            width: 90%;
-            height: 85%;
+            position: absolute;
+            top: 50%; /* Centra verticalmente */
+            left: 50%; /* Centra orizzontalmente */
+            transform: translate(-50%, -50%); /* Ritorna indietro di metà delle proprie dimensioni */
+            
+            /* Dimensioni iniziali (da aggiustare per lo schermo vintage) */
+            width: 20%; 
+            height: 20%;
+            
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            pointer-events: none; /* evita interferenze se Notion gestisce drag */
+            pointer-events: none;
+            
+            /* Debug: Rimuovi il bordo dopo aver trovato il posizionamento corretto */
+            /* border: 1px dashed red; */ 
         }
 
-        /* Stili "neutri" per testo; font-size sarà impostato via JS in px per precisione */
+        /*
+         * Stili Orologio e Greeting (Invariati per la scalabilità)
+         */
         #clock {
             font-family: 'Bitcount Single Ink', monospace;
             color: var(--display-color);
@@ -79,7 +112,7 @@
         #greeting {
             font-family: 'Noto Sans JP', sans-serif;
             color: var(--glow-color);
-            margin-top: 6px;
+            margin-top: 0.6rem;
             text-align: center;
             opacity: 0.95;
             transition: font-size 0.12s linear;
@@ -101,23 +134,28 @@
             const frame = document.getElementById('widgetFrame');
             const clockEl = document.getElementById('clock');
             const greetingEl = document.getElementById('greeting');
+            
+            // Funzione helper
+            const getCssVar = (name, fallback) => {
+                const value = getComputedStyle(document.documentElement).getPropertyValue(name);
+                return Number(value.trim().replace('px', '')) || fallback;
+            };
 
-            // Valori di progetto: mantenuti in sync con i CSS :root
-            const BASE_WIDTH = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-width')) || 400;
-            const BASE_HEIGHT = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-height')) || 280;
-            const BASE_CLOCK_FONT = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-clock-font')) || 40;
-            const BASE_GREETING_FONT = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-greeting-font')) || 20;
+            // Valori di progetto
+            const BASE_WIDTH = getCssVar('--base-width', 400);
+            const BASE_CLOCK_FONT = getCssVar('--base-clock-font', 40);
+            const BASE_GREETING_FONT = getCssVar('--base-greeting-font', 20);
 
-            // Imposta il testo dell'orologio (aggiornamento ogni secondo)
+            // 1. Orologio
             function updateClock(){
                 const now = new Date();
-                const timeString = now.toLocaleTimeString('it-IT', {
+                const timeString = now.toLocaleTimeString('default', {
                     hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
                 });
-                clockEl.textContent = timeString.replace(/\./g, ':');
+                clockEl.textContent = timeString;
             }
 
-            // Gestisce il greeting e il timer al prossimo cambio
+            // 2. Greeting (Logica invariata, è già corretta)
             function setGreetingAndNextInterval(){
                 const now = new Date();
                 const hour = now.getHours();
@@ -140,7 +178,7 @@
                 greetingEl.textContent = greetingText;
 
                 const nextChangeTime = new Date(now);
-                if(hour >= 22 || hour < 5) {
+                if(nextHourChange <= hour) {
                     nextChangeTime.setDate(now.getDate() + 1);
                 }
                 nextChangeTime.setHours(nextHourChange, 0, 0, 0);
@@ -148,51 +186,51 @@
                 setTimeout(setGreetingAndNextInterval, timeToWait);
             }
 
-            // Calcola e applica font-size basati sulle dimensioni REALI della frame
-            function resizeTextToFrame(width, height){
-                // scala in base alla dimensione che meglio preserva le proporzioni
-                // (usiamo min per evitare overflow se la frame è schiacciata)
-                const scaleW = width / BASE_WIDTH;
-                const scaleH = height / BASE_HEIGHT;
-                const scale = Math.min(scaleW, scaleH);
-
-                // Impostiamo font-size come BASE * scale: questo lega direttamente il testo
-                const clockPx = Math.max(8, Math.round(BASE_CLOCK_FONT * scale));    // limite minimo
+            // 3. Ridimensionamento Proporzionale del Testo
+            function resizeTextToFrame(width){
+                // Il calcolo della scala si basa sulla larghezza, che ora è la dimensione reale della frame visualizzata.
+                const scale = width / BASE_WIDTH;
+                
+                const clockPx = Math.max(8, Math.round(BASE_CLOCK_FONT * scale)); 
                 const greetingPx = Math.max(6, Math.round(BASE_GREETING_FONT * scale));
 
                 clockEl.style.fontSize = clockPx + 'px';
                 greetingEl.style.fontSize = greetingPx + 'px';
             }
 
-            // Setup ResizeObserver per reagire ai cambi di dimensione della frame (ideale in iframe/Notion)
+            // 4. Observer per il Ridimensionamento (Cruciale per ambienti dinamici)
             let ro;
+            const measureAndResize = (width) => {
+                if (width > 0) {
+                    // La logica di scalabilità deve tenere conto che il frame non occupa 
+                    // più 100% della pagina se la finestra è troppo stretta o troppo alta.
+                    // Dobbiamo usare la larghezza reale della frame.
+                    const frameRect = frame.getBoundingClientRect();
+                    resizeTextToFrame(frameRect.width);
+                }
+            };
+            
             if (typeof ResizeObserver !== 'undefined') {
                 ro = new ResizeObserver(entries => {
                     for (let entry of entries) {
-                        const cr = entry.contentRect;
-                        resizeTextToFrame(cr.width, cr.height);
+                        measureAndResize(entry.contentRect.width);
                     }
                 });
                 ro.observe(frame);
             } else {
-                // Fallback: aggiorna su resize del window e una prima misura
-                function fallbackMeasure(){
-                    const rect = frame.getBoundingClientRect();
-                    resizeTextToFrame(rect.width, rect.height);
-                }
+                const fallbackMeasure = () => {
+                    measureAndResize(window.innerWidth);
+                };
                 window.addEventListener('resize', fallbackMeasure);
-                // misura iniziale
-                fallbackMeasure();
+                fallbackMeasure(); 
             }
-
-            // In alcuni ambienti (Notion) l'iframe può ricevere dimensioni dinamiche senza trigger di resize
-            // Per sicurezza, eseguiamo una misurazione iniziale dopo il caricamento e una breve ripetizione.
-            function initialMeasure(){
+            
+            // Misura iniziale di sicurezza
+            const initialMeasure = () => {
                 const rect = frame.getBoundingClientRect();
-                resizeTextToFrame(rect.width, rect.height);
-            }
+                resizeTextToFrame(rect.width);
+            };
             window.addEventListener('load', initialMeasure);
-            // piccola retry dopo pochi ms per coprire layout asincroni
             setTimeout(initialMeasure, 150);
 
             // Avvia orologio e greeting
@@ -200,14 +238,6 @@
             setInterval(updateClock, 1000);
             setGreetingAndNextInterval();
 
-            // Esposto per debug se serve
-            window.__widgetDebug = {
-                resizeTextToFrame,
-                BASE_WIDTH,
-                BASE_HEIGHT,
-                BASE_CLOCK_FONT,
-                BASE_GREETING_FONT
-            };
         })();
     </script>
 </body>
