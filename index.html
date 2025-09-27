@@ -1,156 +1,214 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Retro Clock Widget Notion (Proporzionalità Stabile)</title>
+    <meta charset="utf-8" />
+    <title>Retro Clock Widget Notion (Proporzionale alla background)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
+        :root{
             --display-color: #e6e6fa;
             --glow-color: #e6e6fa;
-            --display-rotation-compensation: 0deg; 
-            /* Misure in PX per stabilità dimensionale */
-            --clock-size: 40px;  
-            --greeting-size: 20px;
+            /* Valori di riferimento (dimensione di progetto) */
+            --base-width: 400;    /* px della background di riferimento */
+            --base-height: 280;   /* px della background di riferimento */
+            --base-clock-font: 40;    /* px font quando la frame è base */
+            --base-greeting-font: 20; /* px font quando la frame è base */
         }
 
-        body {
-            height: 100vh;
+        /* Corpo minimale: l'iframe/Notion controllerà lo spazio esterno */
+        html, body {
+            height: 100%;
             margin: 0;
-            position: relative;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* La frame è l'elemento che contiene la background image.
+           Tutto viene scalato con JS rispetto a questa frame. */
+        .widget-frame {
+            width: 100%;                 /* In Notion l'iframe/contesto imposta la larghezza reale */
+            max-width: 800px;            /* limite facoltativo per preview */
+            aspect-ratio: 400 / 280;     /* mantiene la proporzione della background */
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
             background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            perspective: 1000px;
-        }
-
-        .widget-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            /* Rimosse le dimensioni fisse per consentire il ridimensionamento nativo dell'iframe */
+            background-position: center;
+            border-radius: 12px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
             box-sizing: border-box;
-            font-size: 20px;
-            /* La scala uniforma il ridimensionamento */
-            transform:
-                translate(-50%, -50%)
-                rotateX(6deg)
-                rotateY(-3deg)
-                skewX(7deg)
-                scale(0.85); 
         }
 
-        #clock-display-area {
-            position: absolute;
-            /* Misure in percentuale per mantenere la proporzione con lo sfondo */
-            width: 40%;   
-            height: 35%;  
-            
-            /* POSIZIONE PERFETTA (da affinare se necessario) */
-            top: 45%;     
-            left: 65%;    
-            
-            background-color: transparent !important;
+        /* Contenitore interno: occupa la maggior parte della frame e centra il contenuto */
+        .widget-container {
+            width: 90%;
+            height: 85%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            transform: rotate(var(--display-rotation-compensation));
+            justify-content: center;
+            pointer-events: none; /* evita interferenze se Notion gestisce drag */
         }
 
-        .digitale-glow {
+        /* Stili "neutri" per testo; font-size sarà impostato via JS in px per precisione */
+        #clock {
+            font-family: 'Bitcount Single Ink', monospace;
             color: var(--display-color);
-            line-height: 1;
-            white-space: nowrap;
-            text-align: center;
             text-shadow:
                 0 0 5px var(--glow-color),
                 0 0 7px var(--glow-color),
-                0 0 7px rgba(230, 230, 250, 0.4);
-        }
-
-        #clock {
-            font-family: 'Bitcount Single Ink', monospace;
-            font-size: var(--clock-size);
-            font-weight: 700;
+                0 0 7px rgba(230,230,250,0.4);
             letter-spacing: 2px;
-            line-height: 0.9;
+            line-height: 0.95;
+            text-align: center;
+            margin: 0;
+            transition: font-size 0.12s linear;
+            white-space: nowrap;
         }
 
         #greeting {
             font-family: 'Noto Sans JP', sans-serif;
-            font-size: var(--greeting-size);
-            font-weight: 700;
-            margin-top: 4px;
-            text-shadow: none;
-            opacity: 0.9;
             color: var(--glow-color);
+            margin-top: 6px;
+            text-align: center;
+            opacity: 0.95;
+            transition: font-size 0.12s linear;
+            white-space: nowrap;
         }
     </style>
 </head>
 <body>
-    <div class="widget-container">
-        <div id="clock-display-area">
-            <div id="clock" class="digitale-glow"></div>
-            <div id="greeting" class="digitale-glow"></div>
+    <div class="widget-frame" id="widgetFrame">
+        <div class="widget-container">
+            <div id="clock" aria-live="polite"></div>
+            <div id="greeting" aria-live="polite"></div>
         </div>
     </div>
 
     <script>
-        function updateClock() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('it-IT', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            });
-            document.getElementById('clock').textContent = timeString.replace(/\./g, ':');
-        }
+        (function(){
+            // Riferimenti DOM
+            const frame = document.getElementById('widgetFrame');
+            const clockEl = document.getElementById('clock');
+            const greetingEl = document.getElementById('greeting');
 
-        function setGreetingAndNextInterval() {
-            const now = new Date();
-            const hour = now.getHours();
-            const greetingElement = document.getElementById('greeting');
-            let greetingText;
-            let nextHourChange;
+            // Valori di progetto: mantenuti in sync con i CSS :root
+            const BASE_WIDTH = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-width')) || 400;
+            const BASE_HEIGHT = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-height')) || 280;
+            const BASE_CLOCK_FONT = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-clock-font')) || 40;
+            const BASE_GREETING_FONT = Number(getComputedStyle(document.documentElement).getPropertyValue('--base-greeting-font')) || 20;
 
-            if (hour >= 5 && hour < 12) {
-                greetingText = 'おはようございます';
-                nextHourChange = 12;
-            } else if (hour >= 12 && hour < 18) {
-                greetingText = 'こんにちは';
-                nextHourChange = 18;
-            } else if (hour >= 18 && hour < 22) {
-                greetingText = 'こんばんは';
-                nextHourChange = 22;
+            // Imposta il testo dell'orologio (aggiornamento ogni secondo)
+            function updateClock(){
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('it-IT', {
+                    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+                });
+                clockEl.textContent = timeString.replace(/\./g, ':');
+            }
+
+            // Gestisce il greeting e il timer al prossimo cambio
+            function setGreetingAndNextInterval(){
+                const now = new Date();
+                const hour = now.getHours();
+                let greetingText, nextHourChange;
+
+                if(hour >= 5 && hour < 12){
+                    greetingText = 'おはようございます';
+                    nextHourChange = 12;
+                } else if(hour >= 12 && hour < 18){
+                    greetingText = 'こんにちは';
+                    nextHourChange = 18;
+                } else if(hour >= 18 && hour < 22){
+                    greetingText = 'こんばんは';
+                    nextHourChange = 22;
+                } else {
+                    greetingText = 'おやすみ';
+                    nextHourChange = 5;
+                }
+
+                greetingEl.textContent = greetingText;
+
+                const nextChangeTime = new Date(now);
+                if(hour >= 22 || hour < 5) {
+                    nextChangeTime.setDate(now.getDate() + 1);
+                }
+                nextChangeTime.setHours(nextHourChange, 0, 0, 0);
+                const timeToWait = nextChangeTime.getTime() - now.getTime();
+                setTimeout(setGreetingAndNextInterval, timeToWait);
+            }
+
+            // Calcola e applica font-size basati sulle dimensioni REALI della frame
+            function resizeTextToFrame(width, height){
+                // scala in base alla dimensione che meglio preserva le proporzioni
+                // (usiamo min per evitare overflow se la frame è schiacciata)
+                const scaleW = width / BASE_WIDTH;
+                const scaleH = height / BASE_HEIGHT;
+                const scale = Math.min(scaleW, scaleH);
+
+                // Impostiamo font-size come BASE * scale: questo lega direttamente il testo
+                const clockPx = Math.max(8, Math.round(BASE_CLOCK_FONT * scale));    // limite minimo
+                const greetingPx = Math.max(6, Math.round(BASE_GREETING_FONT * scale));
+
+                clockEl.style.fontSize = clockPx + 'px';
+                greetingEl.style.fontSize = greetingPx + 'px';
+            }
+
+            // Setup ResizeObserver per reagire ai cambi di dimensione della frame (ideale in iframe/Notion)
+            let ro;
+            if (typeof ResizeObserver !== 'undefined') {
+                ro = new ResizeObserver(entries => {
+                    for (let entry of entries) {
+                        const cr = entry.contentRect;
+                        resizeTextToFrame(cr.width, cr.height);
+                    }
+                });
+                ro.observe(frame);
             } else {
-                greetingText = 'おやすみ';
-                nextHourChange = 5;
+                // Fallback: aggiorna su resize del window e una prima misura
+                function fallbackMeasure(){
+                    const rect = frame.getBoundingClientRect();
+                    resizeTextToFrame(rect.width, rect.height);
+                }
+                window.addEventListener('resize', fallbackMeasure);
+                // misura iniziale
+                fallbackMeasure();
             }
 
-            greetingElement.textContent = greetingText;
-
-            const nextChangeTime = new Date(now);
-            if (hour >= 22 || hour < 5) {
-                nextChangeTime.setDate(now.getDate() + 1);
+            // In alcuni ambienti (Notion) l'iframe può ricevere dimensioni dinamiche senza trigger di resize
+            // Per sicurezza, eseguiamo una misurazione iniziale dopo il caricamento e una breve ripetizione.
+            function initialMeasure(){
+                const rect = frame.getBoundingClientRect();
+                resizeTextToFrame(rect.width, rect.height);
             }
-            nextChangeTime.setHours(nextHourChange, 0, 0, 0);
+            window.addEventListener('load', initialMeasure);
+            // piccola retry dopo pochi ms per coprire layout asincroni
+            setTimeout(initialMeasure, 150);
 
-            const timeToWait = nextChangeTime.getTime() - now.getTime();
-            setTimeout(setGreetingAndNextInterval, timeToWait);
-        }
-
-        function initWidget() {
-            setInterval(updateClock, 1000);
+            // Avvia orologio e greeting
             updateClock();
+            setInterval(updateClock, 1000);
             setGreetingAndNextInterval();
-        }
 
-        initWidget();
+            // Esposto per debug se serve
+            window.__widgetDebug = {
+                resizeTextToFrame,
+                BASE_WIDTH,
+                BASE_HEIGHT,
+                BASE_CLOCK_FONT,
+                BASE_GREETING_FONT
+            };
+        })();
     </script>
 </body>
 </html>
