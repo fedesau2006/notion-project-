@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Retro Clock Widget Notion (Ottimizzato per stabilità e Proporzionalità)</title>
+    <title>Retro Clock Widget Notion (Proporzionalità Stabile)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitcount+Single+Ink:wght@100..900&display=swap" rel="stylesheet">
@@ -10,11 +10,10 @@
         :root {
             --display-color: #e6e6fa;
             --glow-color: #e6e6fa;
-            /* Rotazione azzerata per allineare allo schermo del monitor */
             --display-rotation-compensation: 0deg; 
-            /* Dimensioni del testo in VW (Viewport Width) per la proporzionalità */
-            --clock-size: 15vw; 
-            --greeting-size: 7vw;
+            /* Misure in PX per stabilità dimensionale */
+            --clock-size: 20px;  
+            --greeting-size: 10px;
         }
 
         body {
@@ -32,27 +31,27 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 400px; /* Base di calcolo */
-            height: 280px; /* Base di calcolo */
+            /* Rimosse le dimensioni fisse per consentire il ridimensionamento nativo dell'iframe */
             box-sizing: border-box;
             font-size: 20px;
+            /* La scala uniforma il ridimensionamento */
             transform:
                 translate(-50%, -50%)
                 rotateX(6deg)
                 rotateY(-3deg)
                 skewX(7deg)
-                scale(0.85);
+                scale(0.85); 
         }
 
         #clock-display-area {
             position: absolute;
-            /* Larghezza e Altezza convertite in percentuale */
-            width: 40%;   /* 160px / 400px */
-            height: 35%;  /* 98px / 280px */
+            /* Misure in percentuale per mantenere la proporzione con lo sfondo */
+            width: 40%;   
+            height: 35%;  
             
-            /* Posizione convertita in percentuale (basata su 10px e 70px) */
-            top: 3.57%;   /* 10px / 280px ≈ 3.57% */
-            left: 17.5%;  /* 70px / 400px = 17.5% */
+            /* POSIZIONE PERFETTA (da affinare se necessario) */
+            top: 38%;     
+            left: 48%;    
             
             background-color: transparent !important;
             display: flex;
@@ -75,7 +74,7 @@
 
         #clock {
             font-family: 'Bitcount Single Ink', monospace;
-            font-size: var(--clock-size); /* Proporzionale (VW) */
+            font-size: var(--clock-size);
             font-weight: 700;
             letter-spacing: 2px;
             line-height: 0.9;
@@ -83,7 +82,7 @@
 
         #greeting {
             font-family: 'Noto Sans JP', sans-serif;
-            font-size: var(--greeting-size); /* Proporzionale (VW) */
+            font-size: var(--greeting-size);
             font-weight: 700;
             margin-top: 4px;
             text-shadow: none;
