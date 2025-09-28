@@ -18,68 +18,81 @@
             /* Dimensione della Background di Riferimento */
             --base-width: 400;      /* px della background di riferimento */
             --base-height: 280;     /* px della background di riferimento */
-            /* Dimensione Font alla Base-Width di 400px (Modificati per essere più piccoli) */
-            --base-clock-font: 28;     
-            --base-greeting-font: 14; 
+            /* Dimensione Font alla Base-Width di 400px */
+            --base-clock-font: 40;     /* px font quando la frame è base */
+            --base-greeting-font: 20;  /* px font quando la frame è base */
         }
 
         /*
-         * Stili Globali e Corpo
+         * Stili Globali e Corpo: Puliscono lo spazio e forzano l'estensione massima
          */
         html, body {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
-            background: #222;
+            background: #222; /* Colore di fallback se l'immagine non copre */
             display: flex;
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            overflow: hidden;
+            overflow: hidden; /* Evita le barre di scorrimento */
         }
 
         /*
-         * La Frame del Widget
+         * La Frame del Widget (Contenitore della Background)
          */
         .widget-frame {
+            /* * Queste proprietà forzano l'elemento a coprire la massima area 
+             * possibile (come un <img> con object-fit: contain), 
+             * mantenendo l'aspetto-ratio.
+             */
             width: 100%;
             height: 100%;
-            max-width: none;
+            max-width: none; /* Rimosso il limite per la modalità full screen */
             aspect-ratio: var(--base-width) / var(--base-height);
+            
+            /* Utilizza 'contain' invece di 'cover' per assicurare che 
+               tutta l'immagine sia visibile all'interno del riquadro */
             background-size: contain; 
-            background-repeat: no-repeat;
+            background-repeat: no-repeat; /* Importante per non ripetere l'immagine */
             background-position: center;
+            
             background-image: url('https://github.com/fedesau2006/notion-1-/raw/main/Gemini_Generated_Image_bhgvoxbhgvoxbhgv.png');
-            border-radius: 0;
+            
+            border-radius: 0; /* Rimosso il border-radius in modalità full screen */
             box-shadow: none;
-            position: relative;
+            position: relative; /* Importante per posizionare l'orologio internamente */
             overflow: hidden;
         }
         
-        /*
-         * Contenitore del Testo (Mantenuto per la tua regolazione fine)
+        /* * Contenitore Interno del Contenuto (Orologio e Greeting) 
+         * * Nota: Queste percentuali (width: 20%, height: 20%) 
+         * devono essere adattate per far combaciare l'orologio 
+         * con lo schermo blu del tuo monitor vintage nell'immagine.
          */
         .widget-container {
             position: absolute;
-            /* POSIZIONE ORIGINALE (Regola top e left qui) */
-            top: 59%; 
-            left: 70.5%; 
-            transform: translate(-50%, -50%); 
+            top: 50%; /* Centra verticalmente */
+            left: 50%; /* Centra orizzontalmente */
+            transform: translate(-50%, -50%); /* Ritorna indietro di metà delle proprie dimensioni */
             
-            /* DIMENSIONI (Regola width e height qui) */
-            width: 25%; 
-            height: 25%;
+            /* Dimensioni iniziali (da aggiustare per lo schermo vintage) */
+            width: 20%; 
+            height: 20%;
             
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             pointer-events: none;
+            
+            /* Debug: Rimuovi il bordo dopo aver trovato il posizionamento corretto */
+            /* border: 1px dashed red; */ 
         }
 
         /*
-         * Stili Orologio: Rotazione e Margine Modificati
+         * Stili Orologio e Greeting (Invariati per la scalabilità)
          */
         #clock {
             font-family: 'Bitcount Single Ink', monospace;
@@ -94,25 +107,16 @@
             margin: 0;
             transition: font-size 0.12s linear;
             white-space: nowrap;
-            
-            /* ✅ MODIFICA: Rotazione sull'asse Z per inclinare */
-            transform: rotate(-6deg); 
         }
 
         #greeting {
             font-family: 'Noto Sans JP', sans-serif;
             color: var(--glow-color);
-            
-            /* ✅ MODIFICA: Margine ridotto per avvicinare il saluto all'ora */
-            margin-top: 0.05rem; 
-            
+            margin-top: 0.6rem;
             text-align: center;
             opacity: 0.95;
             transition: font-size 0.12s linear;
             white-space: nowrap;
-            
-            /* ✅ MODIFICA: Stessa rotazione del clock */
-            transform: rotate(-6deg);
         }
     </style>
 </head>
@@ -125,20 +129,22 @@
     </div>
 
     <script>
-        // [IL TUO CODICE JAVASCRIPT PER OROLOGIO E SCALABILITÀ RIMANE INVARIATO QUI]
         (function(){
+            // Riferimenti DOM
             const frame = document.getElementById('widgetFrame');
             const clockEl = document.getElementById('clock');
             const greetingEl = document.getElementById('greeting');
             
+            // Funzione helper
             const getCssVar = (name, fallback) => {
                 const value = getComputedStyle(document.documentElement).getPropertyValue(name);
                 return Number(value.trim().replace('px', '')) || fallback;
             };
 
+            // Valori di progetto
             const BASE_WIDTH = getCssVar('--base-width', 400);
-            const BASE_CLOCK_FONT = getCssVar('--base-clock-font', 28);
-            const BASE_GREETING_FONT = getCssVar('--base-greeting-font', 14);
+            const BASE_CLOCK_FONT = getCssVar('--base-clock-font', 40);
+            const BASE_GREETING_FONT = getCssVar('--base-greeting-font', 20);
 
             // 1. Orologio
             function updateClock(){
@@ -149,7 +155,7 @@
                 clockEl.textContent = timeString;
             }
 
-            // 2. Greeting
+            // 2. Greeting (Logica invariata, è già corretta)
             function setGreetingAndNextInterval(){
                 const now = new Date();
                 const hour = now.getHours();
@@ -182,6 +188,7 @@
 
             // 3. Ridimensionamento Proporzionale del Testo
             function resizeTextToFrame(width){
+                // Il calcolo della scala si basa sulla larghezza, che ora è la dimensione reale della frame visualizzata.
                 const scale = width / BASE_WIDTH;
                 
                 const clockPx = Math.max(8, Math.round(BASE_CLOCK_FONT * scale)); 
@@ -191,10 +198,13 @@
                 greetingEl.style.fontSize = greetingPx + 'px';
             }
 
-            // 4. Observer per il Ridimensionamento
+            // 4. Observer per il Ridimensionamento (Cruciale per ambienti dinamici)
             let ro;
             const measureAndResize = (width) => {
                 if (width > 0) {
+                    // La logica di scalabilità deve tenere conto che il frame non occupa 
+                    // più 100% della pagina se la finestra è troppo stretta o troppo alta.
+                    // Dobbiamo usare la larghezza reale della frame.
                     const frameRect = frame.getBoundingClientRect();
                     resizeTextToFrame(frameRect.width);
                 }
@@ -215,6 +225,7 @@
                 fallbackMeasure(); 
             }
             
+            // Misura iniziale di sicurezza
             const initialMeasure = () => {
                 const rect = frame.getBoundingClientRect();
                 resizeTextToFrame(rect.width);
