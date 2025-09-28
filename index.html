@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Retro Clock Widget Notion </title>
+    <title>Retro Clock Widget Notion (Ottimizzato e Stabile)</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,12 +12,11 @@
         :root{
             --display-color: #e6e6fa;
             --glow-color: #e6e6fa;
-            --base-width: 410;
-            --base-height: 280;
+            /* Valori base di riferimento per la scalatura JS */
+            --base-width: 410; 
+            --base-height: 280; 
             --base-clock-font: 10;
             --base-greeting-font: 5;
-
-            /* angolo statico: senso antiorario deg -> usare valore negativo */
             --rotate-deg: -6.52deg;
         }
 
@@ -26,7 +25,8 @@
             width:100%;
             margin:0;
             padding:0;
-            background:trasparent;
+            /* CAMBIAMENTO: Trasparenza per eliminare il contorno nero */
+            background:transparent; 
             display:flex;
             align-items:center;
             justify-content:center;
@@ -48,26 +48,22 @@
 
         .widget-container{
             position:absolute;
+            /* Posizionamento del centro del testo sull'orologio */
             top:54.8%;
             left:62%;
             transform: translate(-50%, -50%);
-            width:20%;
-            height:20%;
             display:flex;
             flex-direction:column;
             align-items:center;
             justify-content:center;
             pointer-events:none;
-
          }
 
-        /* elementi orologio / saluto */
         #clock, #greeting{
-            display:inline-block;              /* necessario per trasformazioni */
+            display:inline-block;              
             transform-origin:center center;
             white-space:nowrap;
             transition: font-size 0.09s linear;
-            /* rotazione statica sull'asse Z in senso antiorario di 7deg */
             transform: rotateZ(var(--rotate-deg));
         }
 
@@ -87,11 +83,11 @@
         #greeting{
             font-family: 'Noto Sans JP', sans-serif;
             color: var(--glow-color);
-            margin-top: 1.2px;
+            /* Spaziatura proporzionale al font */
+            margin-top: 0.15em; 
             text-align:center;
             opacity:0.95;
-
-
+        }
             
     </style>
 </head>
@@ -109,21 +105,19 @@
             const clockEl = document.getElementById('clock');
             const greetingEl = document.getElementById('greeting');
 
-            const getCssVar = (name, fallback) => {
-                const value = getComputedStyle(document.documentElement).getPropertyValue(name);
-                return Number(value.trim().replace('px','')) || fallback;
-            };
-
-            const BASE_WIDTH = getCssVar('--base-width', 400);
-            const BASE_CLOCK_FONT = getCssVar('--base-clock-font', 40);
-            const BASE_GREETING_FONT = getCssVar('--base-greeting-font', 20);
+            // --- Valori base per la scalatura (puliti e senza getCssVar) ---
+            const BASE_WIDTH = 410;
+            const BASE_HEIGHT = 280; 
+            const BASE_CLOCK_FONT = 10;
+            const BASE_GREETING_FONT = 5;
+            // ------------------------------------------------------------------
 
             function updateClock(){
                 const now = new Date();
                 const timeString = now.toLocaleTimeString('default', {
                     hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
                 });
-                clockEl.textContent = timeString;
+                clockEl.textContent = timeString; 
             }
 
             function setGreetingAndNextInterval(){
@@ -156,40 +150,44 @@
                 setTimeout(setGreetingAndNextInterval, timeToWait);
             }
 
-            function resizeTextToFrame(width){
-                const scale = width / BASE_WIDTH;
+            // --- FUNZIONE CHIAVE: Ridimensionamento basato sul lato più piccolo (Math.min) ---
+            function resizeTextToFrame(frameWidth, frameHeight){
+                // Calcola il fattore di scala più restrittivo (quello che tocca per primo)
+                const scale = Math.min(
+                    frameWidth / BASE_WIDTH, 
+                    frameHeight / BASE_HEIGHT
+                ); 
+                
                 const clockPx = Math.max(8, Math.round(BASE_CLOCK_FONT * scale));
                 const greetingPx = Math.max(6, Math.round(BASE_GREETING_FONT * scale));
+                
                 clockEl.style.fontSize = clockPx + 'px';
                 greetingEl.style.fontSize = greetingPx + 'px';
             }
+            // ----------------------------------------------------------------------------------
 
-            const measureAndResize = (width) => {
-                if (width > 0) {
-                    const frameRect = frame.getBoundingClientRect();
-                    resizeTextToFrame(frameRect.width);
-                }
+            const measureAndResize = () => {
+                const frameRect = frame.getBoundingClientRect();
+                resizeTextToFrame(frameRect.width, frameRect.height); 
             };
-
+            
+            // Usa ResizeObserver (il metodo più stabile per Notion)
             if (typeof ResizeObserver !== 'undefined') {
                 const ro = new ResizeObserver(entries => {
                     for (let entry of entries) {
-                        measureAndResize(entry.contentRect.width);
+                        resizeTextToFrame(entry.contentRect.width, entry.contentRect.height); 
                     }
                 });
                 ro.observe(frame);
             } else {
-                const fallbackMeasure = () => { measureAndResize(window.innerWidth); };
-                window.addEventListener('resize', fallbackMeasure);
-                fallbackMeasure();
+                // Fallback (meno ottimale)
+                window.addEventListener('resize', measureAndResize);
+                measureAndResize();
             }
 
-            const initialMeasure = () => {
-                const rect = frame.getBoundingClientRect();
-                resizeTextToFrame(rect.width);
-            };
-            window.addEventListener('load', initialMeasure);
-            setTimeout(initialMeasure, 150);
+            // Misura iniziale al caricamento per evitare ritardi
+            window.addEventListener('load', measureAndResize);
+            setTimeout(measureAndResize, 150);
 
             updateClock();
             setInterval(updateClock, 1000);
