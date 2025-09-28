@@ -89,34 +89,12 @@
         #greeting{
             font-family: 'Noto Sans JP', sans-serif;
             color: var(--glow-color);
-            margin-top:0.3rem;
+            margin-top: 2px;
             text-align:center;
             opacity:0.95;
-        }
 
-        /*
-         * Opzioni per dare prospettiva / profondità alla scritta
-         *
-         * Metodo A - usare perspective() dentro transform (nessun parent richiesto):
-         *  - aggiungi questa riga ai selettori #clock, #greeting:
-         *      transform: perspective(700px) rotateX(8deg) rotateZ(var(--rotate-deg));
-         *  - perspective(700px) applicata dentro transform fornisce l'effetto 3D locale.
-         *
-         * Metodo B - usare perspective sul parent (consigliato se hai più figli 3D):
-         *  - decommenta "perspective: 700px;" in .widget-container (sopra)
-         *  - poi usa per i figli:
-         *      transform: rotateX(8deg) rotateZ(var(--rotate-deg));
-         *  - in questo modo il parent definisce il punto di fuga e i figli vengono proiettati.
-         *
-         * Esempio valori consigliati:
-         *  - perspective: 400px  -> effetto più marcato (più "profondo")
-         *  - perspective: 900px  -> effetto più sottile / distante
-         *  - rotateX(6deg..12deg) -> inclinazione verso di te (valori piccoli sono più naturali)
-         *
-         * Nota tecnica: per avere il miglior risultato usa display:inline-block e transform-origin:center center.
-         * Se vuoi disabilitare l'effetto per utenti che preferiscono motion ridotto, aggiungi:
-         *  @media (prefers-reduced-motion: reduce) { #clock,#greeting { transform: rotateZ(var(--rotate-deg)); } }
-         */
+
+            
     </style>
 </head>
 <body>
@@ -155,7 +133,7 @@
                 const hour = now.getHours();
                 let greetingText, nextHourChange;
 
-                if(hour >= 5 && hour < 12){
+                if(hour >= 6 && hour < 12){
                     greetingText = 'おはようございます';
                     nextHourChange = 12;
                 } else if(hour >= 12 && hour < 18){
@@ -166,7 +144,7 @@
                     nextHourChange = 22;
                 } else {
                     greetingText = 'おやすみ';
-                    nextHourChange = 5;
+                    nextHourChange = 6;
                 }
 
                 greetingEl.textContent = greetingText;
