@@ -12,13 +12,13 @@
         :root{
             --display-color: #e6e6fa;
             --glow-color: #e6e6fa;
-            --base-width: 400;
+            --base-width: 410;
             --base-height: 280;
             --base-clock-font: 10;
             --base-greeting-font: 5;
 
-            /* angolo statico: senso antiorario 7deg -> usare valore negativo */
-            --rotate-deg: -7deg;
+            /* angolo statico: senso antiorario deg -> usare valore negativo */
+            --rotate-deg: -6.6deg;
         }
 
         html,body{
@@ -68,7 +68,7 @@
             display:inline-block;              /* necessario per trasformazioni */
             transform-origin:center center;
             white-space:nowrap;
-            transition: font-size 0.12s linear;
+            transition: font-size 0.09s linear;
             /* rotazione statica sull'asse Z in senso antiorario di 7deg */
             transform: rotateZ(var(--rotate-deg));
         }
@@ -89,7 +89,7 @@
         #greeting{
             font-family: 'Noto Sans JP', sans-serif;
             color: var(--glow-color);
-            margin-top:0.6rem;
+            margin-top:0.3rem;
             text-align:center;
             opacity:0.95;
         }
